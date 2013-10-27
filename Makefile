@@ -1,17 +1,19 @@
+FILENAME = simulation_numerique_2-2
+
 all: epub html pdf
 
 epub:
-	mkdir -p output/epub
-	pandoc --toc titre.txt simulation_numerique_2-2.md -o output/epub/simulation_numerique_2-2.epub
+	mkdir -p output/$@
+	pandoc --toc titre.txt ${FILENAME}.md -o output/$@/${FILENAME}.$@
 
 html:
-	mkdir -p output/html
-	./scripts/convertImages.sh images output/html/images
-	pandoc -s simulation_numerique_2-2.md -o output/html/simulation_numerique_2-2.html
+	mkdir -p output/$@
+	./scripts/convertImages.sh images output/$@/images
+	pandoc -s ${FILENAME}.md -o output/$@/${FILENAME}.$@
 
 pdf:
-	mkdir -p output/pdf
-	pandoc -s --latex-engine xelatex simulation_numerique_2-2.md -o output/pdf/simulation_numerique_2-2.pdf
+	mkdir -p output/$@
+	pandoc -s --latex-engine xelatex ${FILENAME}.md -o output/pdf/${FILENAME}.$@
 
 clean_epub:
 	rm -rf output/epub
