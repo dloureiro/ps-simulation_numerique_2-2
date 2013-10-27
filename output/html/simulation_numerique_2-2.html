@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+</head>
+<body>
+<h1 id="la-simulation-numérique-22">La simulation numérique 2/2</h1>
+<p>Maintenant que nous avons expliqué dans le précédent podcast les besoins de simulation, les problématiques rencontrées avec différents champs de recherche et la première simulation numérique de l'histoire (finir par le hasard et les probabilités et toutes ces choses que je déteste personnellement a été dur pour moi) nous allons retourner sur des équations déterministes.</p>
+<h2 id="discrétisation">Discrétisation</h2>
+<p>Il existe différentes catégories de simulation numérique mais je ne me pencherais que sur la simulation continue qui couvre, d'une part ce que je connais, et aussi les équations différentielles et à dérivées partielles.</p>
+<p>L'idée est en fait que la résolution analytique des équations de phénomènes physiques est très complexe et en dehors de cas particuliers ou alors avec des simplifications importantes impossible pour certaines équations comme par exemple celle décrivant des fluides : l'équation de Navier-Stokes qui possède de manière générale des termes non-linéaire (<strong>expliquer ce que veut dire non-linéaire</strong>).</p>
+<p>Je vais aborder trois grandes méthodes de discrétisation par ordre d'apparition :</p>
+<ul>
+<li>Les différences finies</li>
+<li>Les éléments finis</li>
+<li>Les volumes finis</li>
+</ul>
+<p>Chacune possède une origine spécifique et a pour rôle de permettre la transformation d'un problème basé sur des équations différentielles ou aux dérivés partielles donc plutôt de l'analyse vers un problème de résolution de système linéaire de type :</p>
+<p><br /><span class="math"><em>A</em>. <em>x</em> = <em>b</em></span><br /></p>
+<p>Où <span class="math"><em>A</em></span> est la matrice qui représente le problème, <span class="math"><em>x</em></span> la solution à trouver et <span class="math"><em>b</em></span> qui représente les conditions initiales/aux limites qui est un problème d'algèbre linéaire.</p>
+<p>Le travail que l'on fait finalement quand on part de zéro est donc le suivant :</p>
+<ol style="list-style-type: decimal">
+<li>On assure que la méthode de discrétisation est capable de fournir une solution unique (toute la branche mathématique de l'analyse numérique avec des gens comme Schwartz, Cauchy, Lipschitz ou encore Jacques-Louis Lions)</li>
+<li>On ramène le problème décrit par un modèle basé sur des équations différentielles ou à dérivées partielles à un problème d'algèbre linéaire</li>
+<li>On choisit un algorithme qui possède les bonnes propriétés pour la résolution de mon système linéaire</li>
+<li>On implémente cet algorithme</li>
+<li>On l'exécute (avec ou sans parallélisation)</li>
+</ol>
+<h3 id="différences-finies">Différences finies</h3>
+<h4 id="erreurs-associées-condition-s-destabilité-et-de-convergence">Erreurs associées, condition s destabilité et de convergence</h4>
+<h3 id="éléments-finis">Éléments finis</h3>
+<h4 id="erreurs-associées-condition-s-destabilité-et-de-convergence-1">Erreurs associées, condition s destabilité et de convergence</h4>
+<h3 id="volumes-finis">Volumes finis</h3>
+<h4 id="erreurs-associées-condition-s-destabilité-et-de-convergence-2">Erreurs associées, condition s destabilité et de convergence</h4>
+<h2 id="résolution-de-systèmes-linéaires">Résolution de systèmes linéaires</h2>
+<ul>
+<li>méthodes directes</li>
+<li>méthode quasi-stationnaires pour des problèmes complexes avec des méthodes de type newton en temps avec les conditions CFL, et leur adaptation, etc</li>
+<li>méthodes itératives : GMRES, Gradient conjugué, etc</li>
+<li>parallélisation de ces algos</li>
+<li>décomposition de domaine avec les problèmes qui apparaissent quand on découpe trop</li>
+</ul>
+<h2 id="les-solutions-informatiques-qui-existent">Les solutions informatiques qui existent</h2>
+<ul>
+<li>toutes les librairies qui existent pour permettre d'avoir du calcul efficace et des choses déjà à dispo pour créer ses programmes et ses codes de calcul</li>
+<li>Expliquer comment l'informatique a évolué avec les modèles, les discrétisations, les codes de calcul, les maillages</li>
+</ul>
+<h2 id="les-problèmes-qui-sont-apparus-au-cours-du-temps">Les problèmes qui sont apparus au cours du temps</h2>
+<ul>
+<li>Aborder aussi la question du passage à l'informatique avec les différents problèmes que l'on voit apparaître d'un point de vue programmatique</li>
+<li>Expliquer les problèmes qui sont apparus pour traiter les données de bases, intermédiaires, ou de résultat -&gt; lien vers le bigData avec le changement de comportement par rapport au post-traitement des données, in-place avec les outils de visu intégrés aux codes de calcul, les nouveaux développements de composants pour gérer ces données, les vitesses d'écriture et de lecture (expliquer par exemple le traitement des données du LHC avec nos amis du CC IN2P3)</li>
+</ul>
+<h2 id="les-cartes-graphiques-pour-aider-dans-la-simulation">Les cartes graphiques pour aider dans la simulation</h2>
+<ul>
+<li>Expliquer l'intégration des outils comme par exemple les cartes graphiques au sein de ce jeu à profondément changé la donne : utilisé pour faire du calcul matricielle elles peuvent avoir de l'intérêt mais pour des calculs très spécifiques. (donner des pour et des contres, avec des exmeples : ceux des journées du CCRT ou de nos amis qui font de la RDM) (<strong>Héhé on fait justement ça dans l'équipe ou je suis, mais pour de la PG</strong>)</li>
+</ul>
+<h2 id="linpack-le-top500-le-green500">Linpack, le top500, le green500</h2>
+<ul>
+<li>Expliquer que finalement les outils comme Linpack ont servi à faire des classements des meilleurs machines de calcul</li>
+<li>Faire un peu de digression sur le changement d'outil pour faire les classements des machines avec notamment les limites de linpack (article en rapport à retrouver)</li>
+<li>Faire aussi un peu de digression sur le green500 et les problémes d'énergie qui apparaissent aujourd'hui</li>
+</ul>
+<h2 id="la-recherche-informatique-et-les-simulations-à-portée-des-quidam">La recherche informatique et les simulations à portée des quidam</h2>
+<ul>
+<li>Expliquer le besoin de plate-formes comme celles de grid5000 pour tester des nouveaux algos : recherche informatique est aussi important que la recherche qui se sert de l'informatique</li>
+<li>Expliquer aussi qu'aujourd'hui on veut approcher un maximum tout cela de l'utilisateur et qu'il est nécessaire combler un fossé entre ces outils complexes, les utilisateurs métier et les simulations qu'ils veulent faire pour finalement, juste, comprendre et prévoir les phénomènes qui nous entourent. (<strong>Oui t'as de plus en plus de moteur de simu</strong>)</li>
+</ul>
+<h1 id="notes">Notes</h1>
+<h2 id="différences-entre-la-description-lagrangienne-et-la-description-eulerienne">Différences entre la description lagrangienne et la description eulerienne</h2>
+<p>Il est utile de rappeler que deux points de vue peuvent être adoptés pour décrire le mouvement dans un milieu continu :</p>
+<ul>
+<li>La description lagrangienne suit chaque particule le long de sa trajectoire : la valeur d'une variable (température, pression, vitesse…) dépend de l'instant <span class="math"><em>t</em></span> et de la particule considérée (identifiée par sa position <span class="math"><em>ξ⃗</em></span> à l'instant <span class="math"><em>t</em><sub>0</sub></span> de référence).</li>
+<li>La description eulérienne est associée à un repère indépendant du mouvement du fluide, généralement fixe : la valeur des variables fluides dépend alors du temps t et de la position d'observation <span class="math"><em>x⃗</em></span>.</li>
+</ul>
+<p>La description lagrangienne est peut-être plus intuitive mais revêt un inconvénient majeur pour décrire les fluides : contrairement aux solides, les particules peuvent se déplacer librement dans la totalité d'un domaine fluide. L'analyse d'un écoulement est alors une tâche très ardue (on ne peut même pas exprimer un gradient par exemple, car on ne connait pas les particules voisines !). On préfère donc très largement utiliser un point de vue eulérien pour décrire le mouvement d'un fluide. La difficulté réside alors dans le fait que la conservation de la quantité de mouvement est physiquement vérifiée uniquement si l'on considère une particule fluide. Or la particule <span class="math"><em>ξ⃗</em></span> (variable de Lagrange) coïncidant avec le point d'observation <span class="math"><em>x⃗</em></span> (variable d'Euler) change à chaque instant <span class="math"><em>t</em></span>. En termes plus imagés, le randonneur qui observe un point fixe de la rivière n'a jamais les mêmes particules fluides sous les yeux. En particulier, il n'y a aucune raison pour qu'au point <span class="math"><em>x⃗</em></span> il voie la même particule aux instants <span class="math"><em>t</em></span> et <span class="math"><em>t</em> + <em>δ</em><em>t</em></span>. Comment peut-il alors calculer la vitesse ou l'accélération de la particule fluide qu'il a instantanément sous les yeux ?</p>
+</body>
+</html>
