@@ -34,11 +34,7 @@ Plus précisément, si l'on note les excitations $f$ (par référence aux forces
 
 alors le système est dit linéaire si et seulement si pour $\lambda_1$ et $\lambda_2$ deux nombres quelconques, la réponse à l'excitation $\lambda_1.f_1 + \lambda_2.f_2$ est $\lambda_1.x_1 + \lambda_2.x_2$.
 
-Je vais aborder trois grandes méthodes de discrétisation par ordre d'apparition :
-
- * Les différences finies
- * Les éléments finis
- * Les volumes finis
+Je vais présenter un peu en détail la plus simple des trois grandes méthodes de discrétisation (Les différences finies) et j'expliquerais le principe des deux autres (Les éléments finis, Les volumes finis). 
 
 Chacune possède une origine spécifique et a pour rôle de permettre la transformation d'un problème basé sur des équations différentielles ou aux dérivés partielles donc plutôt de l'analyse vers un problème de résolution de système linéaire de type :
 
@@ -103,47 +99,94 @@ Tout ceci fonctionne bien en dimension 1, mais pour peut que les fonctions soien
 
 On voit donc que l'on a besoin des valeurs en différents points qui vont former le maillage et que l'on obtient une relation assez simple pour l'expression des dérivées première, seconde, etc.
 
-Finalement on se rend compte que si notre équation implique par exemple la somme de la dérivée seconde avec le produit de la fonction par un scalaire en tout point du domaine, on se retrouve, grâce aux opérateurs discrétisés à n'avoir affaire qu'à un produit de valeurs de la fonction à trouver qui seront prises en des points
-définis du maillage.
+Finalement on se rend compte que si notre équation implique par exemple une combinaison linéaire de la dérivée seconde et de la fonction en tout point du domaine:
 
-Ainsi si $x$ est la solution et $f(x)$ e
+$$ \alpha.f'' + \beta.f = \gamma $$
+
+on se retrouve, grâce aux opérateurs discrétisés à n'avoir affaire qu'à un produit de valeurs de la fonction à trouver qui seront prises en des points définis du maillage.
+
+Ainsi pour tous les points du domaine, on a une une relation entre différentes valeurs de la fonction aux points du maillage. Si on représente par un vecteur $f$ dont les différentes valeurs sont celles de la solution aux points du maillage, on peut représenter cela par le produit entre une matrice qui va exprimer cette relation et le vecteur qui correspond à la solution qui est ce que l'on cherche ensuite à résoudre avec des algorithmes.
+
+Pour information : à partir du 18ème siècle des mathématiciens se sont mis à utiliser des développments de Taylor, et donc les différences finies pour mettre en place des abaques notamment pour les logarithmes et la trigonométrie qui étaient utilisés pour le cadastre, la navigation, l'artillerie, les statistiques, le calcul d'intérêts ou encore l'astronomie. Comme ceux-ci nécessitaient de grands nombres d'opérations de calcul, des mathématiciens et inventeurs se sont mis à tenter la mise en place de machines permettant le calcul "automatique" de ces différences finies. Le premier à presque y arriver fut Charles Baggage entre 1820 et 1843 (il n'y arriva pas complètement) et le Suédois George SCHEUTZ (1785-1873) y arriva en 1840. A savoir que ce type de machine a été utilisé jusque dans les année 1930.
 
 ### Éléments finis
 
+Pour les éléments finis, on n'utilise pas des développements de Taylor-Young comme pour les différences finies qui sont en fait des approximations des dérivées, mais plutôt des approximations des intégrales des équations aux dérivées partielles étudiées.
+
+Dans ce type de discrétisation, il est plutôt question d'approximer la solution sur le maillage par des fonctions qui seront définies sur les éléments du domaine, et uniquement sur ceux-ci. Un peu comme une base de fonctions comme les bases dans $\mathbb{R}^n$.
+
+Comme décrit dans^[docinsa], à l'origine, la méthode des éléments finis était une généralisation de la méthode des déplacements pour les structures à barres, à la mécanique des milieux continus. Depuis cette technique a largement débordé ce premier cadre pour aboutir à une méthode numérique permettant de résoudre les problèmes d'équations différentielles "aux limites". C'est notamment pour cela que l'on retrouve souvent des histoires de "travail" pour exprimer certaines quantités dans les différentes formulations.
+
+Comme je le disais, ici l'idée est de décomposer le problème sur des bases de fonctions qui sont définies sur les arêtes des "éléments" utilisés pour le maillage, et ensuite d'utiliser la décomposition de la fonction solution sur ce maillage, et par l'usage d'analyse numérique un peu poussée pour être explicité dans ce podcast, on arrive à trouver un système linéaire qui permet d'aboutir à un système linéaire de type $A.x = b$. 
+
+Au cours de la discrétisation, on fait ce que l'on appelle une réduction d'ordre de dérivation qui permet d'intégrer les conditions aux limites au sein du système linéaire.
+
+Pour information, cette méthode des éléments finis est extrêment répandu dans les logiciels de simulations pour des domaines variés allant de mécanique des milieux continus, la mécanique des fluides, la météorologie, en génie civil, en électromagnétique, etc.
+
+Pour ceux que cela intéresse, vous pourrez trouver une liste assez longue de cours sur le sujet dans les références.
+
 ### Volumes finis
+
+De la même manière que pour les éléments finis, la méthode des volumes finis travaille sur les intégrales des EDP étudiées. A la différence des éléments finis où l'on travaille plutôt sur ce que l'on appelle la formulation variationnelle ou formulation faible (on a réduit le niveau de dérivation entre autres) on travaille ici directement sur la formulation forte [^volfiniswp].
+
+En fait, cette méthodes des volumes finis a d'abord été appliquée aux lois de conservation (conservation de la masse, de la quantité de mouvement, etc) qui mettent en jeu un opérateur différentiel nommé *divergence*.
+
+Grâce à un théorème dit de flux-divergence, on transforme des équations sur des volumes (autour des points du maillage) en des équations sur des surfaces et comme les équations sont conservatives, le flux qui entre est égal au flux qui sort donc cela s'y prête bien.
+
+A la différence des éléments finis, la méthode des volumes finis est simplement utilisable sur des maillages dit non-structurés (comme on ne se soucie pas du maillage, on peut mélanger des triangles avec des carrés, etc. Ceci est plus compliqué avec la méthode des éléments finis).
 
 ## Résolution de systèmes linéaires
 
-* méthodes directes
-* méthode quasi-stationnaires pour des problèmes complexes avec des méthodes de type newton en temps avec les conditions CFL, et leur adaptation, etc
-* méthodes itératives : GMRES, Gradient conjugué, etc
-* parallélisation de ces algos
-* décomposition de domaine avec les problèmes qui apparaissent quand on découpe trop
+Une fois que ces méthodes de discrétisation nous ont permis d'obtenir des systèmes liénaires à résoudre, il est nécessaire de mettre en place des algorithmes de résolution du système obtenu.
 
-## Les solutions informatiques qui existent
+Grosso modo, l'idée est d'inverser la matrice $A$ pour que l'on puisse se retrouver avec $x = A^{-1}.b$. Sauf que cela n'est pas forcément évident quand on parle de matrices. Je ne reviendrais pas sur la question car elle a notamment été abordé dans de précédents podcasts je crois quand il était question de commutativité de la multiplication quand il est question de matrice.
 
-* toutes les librairies qui existent pour permettre d'avoir du calcul efficace et des choses déjà à dispo pour créer ses programmes et ses codes de calcul
-* Expliquer comment l'informatique a évolué avec les modèles, les discrétisations, les codes de calcul, les maillages
+Il existe ainsi différentes méthodes que l'on pourra classer dans deux grandes catégories :
 
-## Les problèmes qui sont apparus au cours du temps
+* Les méthodes directes où avec la technique dite du pivot de Gauss ou d'élimination de Gauss-Jordan on se débrouille pour arriver à inverser la matrice (en gros). Le problème de ces méthodes, c'est qu'elles peuvent être longues et qu'elles peuvent amener des problèmes numériques pendant l'inversion (notamment quand on va devoir diviser par des nombres petits, des choses comme ça), même si à priori elles permettent d'obtenir la solution exacte.
+* Les méthodes itératives. Celles-ci propose de partir d'une solution proposée et d'ensuite minimiser la différence entre ce qui est obtenu et la réalité. Les algorithmes les plus connus vont être ceux nommés ADI, GMRES, Gradient conjugué, etc. A noter que la méthode ADI a été l'une des premières qui fut mise en place car elle se basait sur les différences finies (relativement moins complexes que les autres méthodes de discrétisation) et prenait peu de place en mémoire (la matrice avait beaucoup de zéros et seules des bandes le long de la diagonales étaient non-nulles). Ces méthodes peuvent diverger, et il est donc important d'avoir une solution initiale pas trop "mauvaise", mais aussi que la matrice aient de bonnes propriétés (conditionnement, etc).
 
-* Aborder aussi la question du passage à l'informatique avec les différents problèmes que l'on voit apparaître d'un point de vue programmatique
-* Expliquer les problèmes qui sont apparus pour traiter les données de bases, intermédiaires, ou de résultat -> lien vers le bigData avec le changement de comportement par rapport au post-traitement des données, in-place avec les outils de visu intégrés aux codes de calcul, les nouveaux développements de composants pour gérer ces données, les vitesses d'écriture et de lecture (expliquer par exemple le traitement des données du LHC avec nos amis du CC IN2P3)
+Quand les systèmes linéaires à résoudre deviennent trop gros et que l'on a à disposition des serveurs informatiques avec de multiples processeurs, voire même plusieurs serveurs informatiques, on peut paralléliser ces algorithmes.
+
+Pléthore de littérature existe sur la question, et on peut faire ce que l'on appelle de la décomposition de domaine. Si on dispose de quatre processeurs et que l'on veut simuler la modification de structure d'un avion en vol, on va par exemple faire calculer la solution sur chaque aile à l'un d'entre eux et on va couper le fuselage en deux pour le distribuer entre les deux processeurs restant.
+
+Dans ces cas-là il devient important de bien découper ses problèmes pour qu'aux frontières tout se passent bien (je rappelle que l'on calcule les solutions aux points des maillages et que si ils ne coincident pas on peut commencer à avoir des problèmes) avec un peu de recouvrement pour que les informations de la solution à chercher puissent se propager entre les "domaines".
+
+## Les solutions informatiques qui existent et les problèmes afférents
+
+Il existent une grande quantité de librairies logicielles qui existent pour réaliser ces différentes opérations, les plus connues se nomment BLAS (pour Basic Linear Algebra Solvers), Linpack ou encore LAPACK (pour Linear Algebra Package) qui fournissent des outils pour résoudre des parties des problèmes informatiques.
+
+A savoir que ces librairies ont été écrites en Fortran, l'un des tout premiers langages informatiques de haut-niveau créé dans les années 50 et encore toujours roi dans le monde de la simulation informatique.
+
+Je l'ai survolé, mais l'informatique en terme de matériel et de logiciel a évolué de manière conjointe. Comme je l'expliquais, on est passé de discrétisation avec des différences finies et des méthodes de type ADI peu gourmande en mémoire dans les années 50-60, à des méthodes plus complexes comme les éléments finis par la suite. On a vu aussi grandir les maillages qui n'avait que de petites tailles pour des problèmes de taille mémoire et disque à des problèmes qui font maintenant plusieurs dizaines voire centaines de millions d'inconnues et qui prennent ainsi plusieurs giga-octets de RAM.
+On a aussi du paralléliser les algorithmes pour pouvoir tirer partie des super-calculateur et leur puissance répartie.
+
+Petite anecdote marrante : en 2006 j'ai fait un stage dans une société qui faisait de la simulation et un cas marquant était celui de la simulation du décollage d'un hélicoptère à turbo-réacteur. Le calcul était tellement complexe qu'il fallait près de 24 heures pour que le logiciel simule quelques dixièmes de seconde avant d'exploser sur près de 50 serveurs !
+
+C'est dire la complexité des modèles considérés et des contraintes informatiques (autant logicielles que matérielles) qui existent !
+
+D'ailleurs un des problèmes qui est apparu est la question des données. J'ai parlé lors du précédent podcast de la simulation de l'univers, avec les données gigantesques générées (1,5 peta-octet utile). Ce qu'il faut savoir c'est qu'il y a eu près de 100x plus de données générées qu'il a fallu trier !!!
 
 ## Les cartes graphiques pour aider dans la simulation
 
-* Expliquer l'intégration des outils comme par exemple les cartes graphiques au sein de ce jeu à profondément changé la donne : utilisé pour faire du calcul matricielle elles peuvent avoir de l'intérêt mais pour des calculs très spécifiques. (donner des pour et des contres, avec des exmeples : ceux des journées du CCRT ou de nos amis qui font de la RDM) (**Héhé on fait justement ça dans l'équipe ou je suis, mais pour de la PG**)
+Quelque chose qui s'est développé ces dernières années à notamment été l'usage des cartes graphiques pour aider au calcul. En tant que solution de traitement parallèle massif, les GPUs de ces cartes peuvent avoir de vrais atouts.
+
+Il y a quand même quelques inconvénients :
+
+ * Avant que qu'OpenCL n'arrive, voire même CUDA avant lui (deux "langages dédié à l'usage de GPU") il était nécessaire de manier les structures de données propres aux jeux vidéos pour en tirer partie. Ce n'était pas très évident et plus du domaine de la bidouille qu'autre chose. Maintenant cela est plus simple, et un certain nombre de code de calcul se mettent à en tirer partie.
+ * Cependant les limitations en terme de mémoire de ces cartes (si on a plus de données que la place disponible dans la carte, on va adresser la mémoire centrale de l'ordinateur et l'on perd tout l'intérêt) et de précision numérique (les cartes ne calcul qu'avec des entiers de base et pas des nombres réels) font que les performances mirobolantes annoncées par Nvidia notamment en font revenir plus d'un vers le calcul plus classique 
+
+Une des alternatives qui commence à arriver serait l'usage (comme il y a bien longtemps) de co-processeurs spécialisés à cette tâche comme les Xeon-Phi de chez Intel.
 
 ## Linpack, le top500, le green500
 
-* Expliquer que finalement les outils comme Linpack ont servi à faire des classements des meilleurs machines de calcul
-* Faire un peu de digression sur le changement d'outil pour faire les classements des machines avec notamment les limites de linpack (article en rapport à retrouver)
-* Faire aussi un peu de digression sur le green500 et les problémes d'énergie qui apparaissent aujourd'hui
+Un effet collatéral étonnant a été que l'usage de la librairie Linpack pour évaluer la performance crête des super-calculateurs. L'idée était en effet de mesure la performance des systèmes informatiques pour la résolution d'un système liénaire basé sur les fonctions fournies par la librairie.
 
-## La recherche informatique et les simulations à portée des quidam
+Pendant longtemps ce logiciel a été à la base du Top500, le classement des 500 calculateurs les plus puissants du monde. Puis avec l'avènement des cartes graphiques qui en puissance brute sont intéressantes, mais en usage réel assez peu utilisables et les problématiques de grandes données qui ne sont pas très bien prises en compte par ce test, différents autres classements sont apparus avec le Green500 notamment qui estime plutôt la performance énergétique d'un système informatique.
 
-* Expliquer le besoin de plate-formes comme celles de grid5000 pour tester des nouveaux algos : recherche informatique est aussi important que la recherche qui se sert de l'informatique
-* Expliquer aussi qu'aujourd'hui on veut approcher un maximum tout cela de l'utilisateur et qu'il est nécessaire combler un fossé entre ces outils complexes, les utilisateurs métier et les simulations qu'ils veulent faire pour finalement, juste, comprendre et prévoir les phénomènes qui nous entourent. (**Oui t'as de plus en plus de moteur de simu**)
+Il est en effet devenu crucial de gérer correctement les problématiques d'énergie, car la puissance de calcul de ces moyens informatiques gradissant, la consommation énergétique va de pair et ceci sans parler de la consommation électrique des climatisations nécessaires pour refroidir les serveurs. Pour info, aujourd'hui, il faut quasiment autant d'énergie pour la climatisation que pour les serveurs.
+
+Avec près de 17 000 coeurs de calcul au CC-IN2P3 (le centre de calcul qui possédait les données du LHC concernant le boson de Higgs) et les 20 Peta-octets de stockage sur disque et sur bande, il est nécessaire de disposer d'une alimentation de plusieurs mégawatts !
 
 # Notes
 
@@ -170,3 +213,6 @@ La description lagrangienne est peut-être plus intuitive mais revêt un inconv�
 [^condneumannwp]: [http://fr.wikipedia.org/wiki/Condition_aux_limites_de_Neumann](http://fr.wikipedia.org/wiki/Condition_aux_limites_de_Neumann)
 [^excondrobin]: [http://www.cmi.univ-mrs.fr/~torresan/MathPhy/cours/node16.html#SECTION0033320000000000000000](http://www.cmi.univ-mrs.fr/~torresan/MathPhy/cours/node16.html#SECTION0033320000000000000000)
 [^condlimdynwp]: [http://fr.wikipedia.org/wiki/Condition_aux_limites_dynamique](http://fr.wikipedia.org/wiki/Condition_aux_limites_dynamique)
+[^diffinies]: [http://pauillac.inria.fr/~weis/info/histoire_de_l_info.html](http://pauillac.inria.fr/~weis/info/histoire_de_l_info.html)
+[^docinsa]: [http://docinsa.insa-lyon.fr/polycop/download.php?id=104080&id2=1](http://docinsa.insa-lyon.fr/polycop/download.php?id=104080&id2=1)
+[^volfiniswp]: [http://fr.wikipedia.org/wiki/M%C3%A9thode_des_volumes_finis](http://fr.wikipedia.org/wiki/M%C3%A9thode_des_volumes_finis)
