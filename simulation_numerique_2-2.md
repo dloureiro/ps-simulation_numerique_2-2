@@ -18,7 +18,12 @@ Il existe d'ailleurs différentes méthodes de simulation, avec par exemple les 
 
 ## Pourquoi la discrétisation ?
 
-L'idée est en fait que la résolution analytique des équations de phénomènes physiques est très complexe et en dehors de cas particuliers ou alors avec des simplifications importantes impossible pour certaines équations comme par exemple celle décrivant des fluides : l'équation de Navier-Stokes qui possède de manière générale des termes non-linéaire.
+L'idée est en fait que la résolution analytique des équations de phénomènes physiques est très complexe et en dehors de cas particuliers ou alors avec des simplifications importantes impossible pour certaines équations comme par exemple celle décrivant des fluides : l'équation de Navier-Stokes[^navierstokeswp] qui possède de manière générale des termes non-linéaire.
+
+![Résultat de calcul Navier-Stokes instationnaire dans une tuyère,
+illustrant le caractère tridimensionnel de l'écoulement turbulent en régime de décollement (DAAP - Sébastien Deck)](images/tuyere.jpg "Résultat de calcul Navier-Stokes instationnaire dans une tuyère,
+illustrant le caractère tridimensionnel de l'écoulement turbulent en régime de décollement
+(DAAP - Sébastien Deck)")
 
 Comme expliqué sur Wikipédia [^princsuppwp] : 
 On dit qu'un système de type entrée-sortie est linéaire ou relève du principe de superposition si:
@@ -45,7 +50,7 @@ Où $A$ est la matrice qui représente le problème, $x$ la solution à trouver 
 Le travail que l'on fait finalement quand on part de zéro est donc le suivant :
 
  1. On définit les équations du modèle qui représente le phénomène que l'on souhaite étudier avec ses conditions aux limites
- 2. On assure que la méthode de discrétisation est capable de fournir une solution unique (toute la branche mathématique de l'analyse numérique avec des gens comme Schwartz, Cauchy, Lipschitz ou encore Jacques-Louis Lions)
+ 2. On assure que la méthode de discrétisation est capable de fournir une solution unique
  3. On ramène le problème décrit par un modèle basé sur des équations différentielles ou à dérivées partielles à un problème d'algèbre linéaire
  4. On choisit un algorithme qui possède les bonnes propriétés pour la résolution de mon système linéaire
  5. On implémente cet algorithme
@@ -79,7 +84,7 @@ Comme il est question de discrétiser, on peut par exemple regarder ce que cela 
  * Prenons un segment de longueur 1
  * On le découpe en $n+1$ sous-segments dont le pas sera de $h=1/n$
 
-On a grosso modo trois types de différences : 
+On a grosso modo trois types de différences[^difffinwp]  [^difffinwp2] : 
 
  * "en avant" : on prend les valeurs en $x$ et $x+h$
  * "en arrière" : on prend les valeurs en $x-h$ et $x$,
@@ -91,7 +96,7 @@ $$ f'(x) = \frac{f(x+h)-f(x)}{h} $$
 
 Ce qui ressemble à l'expression de la dérivée en terme de limite.
 
-En appliquant ce principe à la dérivée première pour obtenir la dérivée second on pour obtenir quelque chose de similaire :
+En appliquant le même principe à la dérivée première pour obtenir la dérivée second on pour obtenir quelque chose de similaire :
 
 $$ f''(x) = \frac{f(x+h) - 2f(x) + f(x+h)}{h^2} $$
 
@@ -105,9 +110,9 @@ $$ \alpha.f'' + \beta.f = \gamma $$
 
 on se retrouve, grâce aux opérateurs discrétisés à n'avoir affaire qu'à un produit de valeurs de la fonction à trouver qui seront prises en des points définis du maillage.
 
-Ainsi pour tous les points du domaine, on a une une relation entre différentes valeurs de la fonction aux points du maillage. Si on représente par un vecteur $f$ dont les différentes valeurs sont celles de la solution aux points du maillage, on peut représenter cela par le produit entre une matrice qui va exprimer cette relation et le vecteur qui correspond à la solution qui est ce que l'on cherche ensuite à résoudre avec des algorithmes.
+Ainsi pour tous les points du domaine, on a une une relation entre différentes valeurs de la fonction aux points du maillage. Si on représente par un vecteur $f$ dont les différentes valeurs sont celles de la solution aux points du maillage, on peut représenter cela par le produit entre une matrice (qui va exprimer cette relation) et le vecteur qui correspond à la solution. C'est ce système linéaire que l'on cherche ensuite à résoudre avec des algorithmes.
 
-Pour information : à partir du 18ème siècle des mathématiciens se sont mis à utiliser des développments de Taylor, et donc les différences finies pour mettre en place des abaques notamment pour les logarithmes et la trigonométrie qui étaient utilisés pour le cadastre, la navigation, l'artillerie, les statistiques, le calcul d'intérêts ou encore l'astronomie. Comme ceux-ci nécessitaient de grands nombres d'opérations de calcul, des mathématiciens et inventeurs se sont mis à tenter la mise en place de machines permettant le calcul "automatique" de ces différences finies. Le premier à presque y arriver fut Charles Baggage entre 1820 et 1843 (il n'y arriva pas complètement) et le Suédois George SCHEUTZ (1785-1873) y arriva en 1840. A savoir que ce type de machine a été utilisé jusque dans les année 1930.
+Pour information[^pauillac] : à partir du 18ème siècle des mathématiciens se sont mis à utiliser des développments de Taylor, et donc les différences finies pour mettre en place des abaques notamment pour les logarithmes et la trigonométrie qui étaient utilisés pour le cadastre, la navigation, l'artillerie, les statistiques, le calcul d'intérêts ou encore l'astronomie. Comme ceux-ci nécessitaient de grands nombres d'opérations de calcul, des mathématiciens et inventeurs se sont mis à tenter la mise en place de machines permettant le calcul "automatique" de ces différences finies. Le premier à presque y arriver fut Charles Baggage entre 1820 et 1843 (il n'y arriva pas complètement) et le Suédois George SCHEUTZ (1785-1873) y arriva en 1840. A savoir que ce type de machine a été utilisé jusque dans les année 1930.
 
 ### Éléments finis
 
@@ -117,21 +122,21 @@ Dans ce type de discrétisation, il est plutôt question d'approximer la solutio
 
 Comme décrit dans^[docinsa], à l'origine, la méthode des éléments finis était une généralisation de la méthode des déplacements pour les structures à barres, à la mécanique des milieux continus. Depuis cette technique a largement débordé ce premier cadre pour aboutir à une méthode numérique permettant de résoudre les problèmes d'équations différentielles "aux limites". C'est notamment pour cela que l'on retrouve souvent des histoires de "travail" pour exprimer certaines quantités dans les différentes formulations.
 
-Comme je le disais, ici l'idée est de décomposer le problème sur des bases de fonctions qui sont définies sur les arêtes des "éléments" utilisés pour le maillage, et ensuite d'utiliser la décomposition de la fonction solution sur ce maillage, et par l'usage d'analyse numérique un peu poussée pour être explicité dans ce podcast, on arrive à trouver un système linéaire qui permet d'aboutir à un système linéaire de type $A.x = b$. 
+Comme je le disais, ici l'idée est de décomposer le problème sur des bases de fonctions qui sont définies sur les arêtes des "éléments" utilisés pour le maillage, et ensuite d'utiliser la décomposition de la fonction solution sur ce maillage, et par l'usage d'analyse numérique un peu trop poussée pour être explicité ici, on arrive à trouver un système linéaire qui permet d'aboutir à un système linéaire de type $A.x = b$. 
 
 Au cours de la discrétisation, on fait ce que l'on appelle une réduction d'ordre de dérivation qui permet d'intégrer les conditions aux limites au sein du système linéaire.
 
 Pour information, cette méthode des éléments finis est extrêment répandu dans les logiciels de simulations pour des domaines variés allant de mécanique des milieux continus, la mécanique des fluides, la météorologie, en génie civil, en électromagnétique, etc.
 
-Pour ceux que cela intéresse, vous pourrez trouver une liste assez longue de cours sur le sujet dans les références.
+Pour ceux que cela intéresse, vous pourrez trouver une liste assez longue de cours sur le sujet dans les références[^emformwp]  [^emrappelswp]  [^empreswp]  [^efmwp]  [^dynastruct].
 
 ### Volumes finis
 
 De la même manière que pour les éléments finis, la méthode des volumes finis travaille sur les intégrales des EDP étudiées. A la différence des éléments finis où l'on travaille plutôt sur ce que l'on appelle la formulation variationnelle ou formulation faible (on a réduit le niveau de dérivation entre autres) on travaille ici directement sur la formulation forte [^volfiniswp].
 
-En fait, cette méthodes des volumes finis a d'abord été appliquée aux lois de conservation (conservation de la masse, de la quantité de mouvement, etc) qui mettent en jeu un opérateur différentiel nommé *divergence*.
+En fait, cette méthodes des volumes finis a d'abord été appliquée aux lois de conservation (conservation de la masse, de la quantité de mouvement, etc) qui mettent en jeu un opérateur différentiel nommé *divergence*[^divergencewp].
 
-Grâce à un théorème dit de flux-divergence, on transforme des équations sur des volumes (autour des points du maillage) en des équations sur des surfaces et comme les équations sont conservatives, le flux qui entre est égal au flux qui sort donc cela s'y prête bien.
+Grâce à un théorème dit de flux-divergence[^fluxdivwp], on transforme des équations sur des volumes (autour des points du maillage) en des équations sur des surfaces et comme les équations sont conservatives, le flux qui entre est égal au flux qui sort donc cela s'y prête bien.
 
 A la différence des éléments finis, la méthode des volumes finis est simplement utilisable sur des maillages dit non-structurés (comme on ne se soucie pas du maillage, on peut mélanger des triangles avec des carrés, etc. Ceci est plus compliqué avec la méthode des éléments finis).
 
@@ -143,20 +148,40 @@ Grosso modo, l'idée est d'inverser la matrice $A$ pour que l'on puisse se retro
 
 Il existe ainsi différentes méthodes que l'on pourra classer dans deux grandes catégories :
 
-* Les méthodes directes où avec la technique dite du pivot de Gauss ou d'élimination de Gauss-Jordan on se débrouille pour arriver à inverser la matrice (en gros). Le problème de ces méthodes, c'est qu'elles peuvent être longues et qu'elles peuvent amener des problèmes numériques pendant l'inversion (notamment quand on va devoir diviser par des nombres petits, des choses comme ça), même si à priori elles permettent d'obtenir la solution exacte.
-* Les méthodes itératives. Celles-ci propose de partir d'une solution proposée et d'ensuite minimiser la différence entre ce qui est obtenu et la réalité. Les algorithmes les plus connus vont être ceux nommés ADI, GMRES, Gradient conjugué, etc. A noter que la méthode ADI a été l'une des premières qui fut mise en place car elle se basait sur les différences finies (relativement moins complexes que les autres méthodes de discrétisation) et prenait peu de place en mémoire (la matrice avait beaucoup de zéros et seules des bandes le long de la diagonales étaient non-nulles). Ces méthodes peuvent diverger, et il est donc important d'avoir une solution initiale pas trop "mauvaise", mais aussi que la matrice aient de bonnes propriétés (conditionnement, etc).
+* Les méthodes directes[^directmeth]
+* Les méthodes itératives [^itermethwp]
+
+Je vais ici me concentrer sur les méthodes qui servent à la résolution de systèmes en régime stationnaire (ne dépendant pas du temps). Quand le temps intervient on va utiliser d'autres méthodes comme les méthodes de d'Euler[^eulerwp], de Crank-Nicolson[^cranicwp], de Runge-Kutta[^rkwp], etc.
+
+A noter un point intéressant : pour certains problèmes stationnaires, on peut-être amené à transformer un problème stationnaire en problème quasi-stationnaire (avec un petit terme en temps qui va apparaître dans la matrice) afin qu'ils soient plus simple à résoudre (le fait que l'on augmente artificiellement les termes sur la diagonale de la matrice améliore la capacité des algorithmes utilisés ensuite à converger vers la bonne solution). On va alors utiliser, pour chaque pas de temps une méthode directe ou itérative pour résoudre une équation à un temps donné, et ensuite une méthode comme celles citées un peu plus haut pour résoudre le problème quasi-stationnaire dont la solution sera celle du problème stationnaire.
+
+### Les méthodes directes
+
+Les méthodes directives permettent théoriquement d'aboutir à la solution exacte du système liénaire.
+La plus classique est celle dite du pivot de Gauss ou d'élimination de Gauss-Jordan. Le but est en fait de se débrouille pour arriver à inverser la matrice (en gros). Le problème de ces méthodes, c'est qu'elles peuvent être longues et qu'elles peuvent amener des problèmes numériques pendant l'inversion (notamment quand on va devoir diviser par des nombres petits, des choses comme ça), même si à priori elles permettent d'obtenir la solution exacte.
+
+### Les méthodes itératives. 
+
+Celles-ci propose de partir d'une solution $x_0$ et d'ensuite minimiser une fonction où entre en jeu la matrice et le second membre. Pour que tout se passe bien, il est nécessaire que $x_0$ soit proche de la solution finale.
+
+Une méthode (méthodes dites de Krylov[^krylovwp]) qui trouve différentes implémentations utilisées dans les codes de calcul aujourd'hui est la suivante : L'idée est de définir des vecteurs au fur et à mesure des itérations avec comme contraint qu'ils soient dit conjugué ou orthogonaux avec un certain produit scalaire (où entre en jeu la matrice du système linéaire). Cette condition implique d'ailleurs un certain nombre de propriété sur la matrice du système). L'idée est en fait de créer une base de $\mathbb{R}^n$ avec des vecteurs orthogonaux entre eux et dont la solution en construction est une combinaison linéaire. On voit donc en fait qu'une fois constitué autant de vecteur orthogonaux que la taille de l'espace, on se retrouve avec une solution théoriquement exacte.
+Les algorithmes les plus connus implémentant cette méthode vont être ceux nommés GMRES, Gradient conjugué[^gcwp], etc. 
+
+![Représentation de la convergence de la méthode du gradient conjugué](images/500px-Conjugate_gradient_illustration.svg.png "Représentation de la convergence de la méthode du gradient conjugué")
+
+A noter que la méthode ADI[^adiwp] a été l'une des premières qui fut mise en place car elle se basait sur les différences finies (relativement moins complexes que les autres méthodes de discrétisation) et prenait peu de place en mémoire (la matrice avait beaucoup de zéros et seules des bandes le long de la diagonales étaient non-nulles). Ces méthodes peuvent diverger, et il est donc important d'avoir une solution initiale pas trop "mauvaise", mais aussi que la matrice aient de bonnes propriétés (conditionnement, etc).
 
 Quand les systèmes linéaires à résoudre deviennent trop gros et que l'on a à disposition des serveurs informatiques avec de multiples processeurs, voire même plusieurs serveurs informatiques, on peut paralléliser ces algorithmes.
 
-Pléthore de littérature existe sur la question, et on peut faire ce que l'on appelle de la décomposition de domaine. Si on dispose de quatre processeurs et que l'on veut simuler la modification de structure d'un avion en vol, on va par exemple faire calculer la solution sur chaque aile à l'un d'entre eux et on va couper le fuselage en deux pour le distribuer entre les deux processeurs restant.
+Pléthore de littérature existe sur la question, et on peut faire ce que l'on appelle de la décomposition de domaine[^ddmwp]. Si on dispose de quatre processeurs et que l'on veut simuler la modification de structure d'un avion en vol, on va par exemple faire calculer la solution sur chaque aile à l'un d'entre eux et on va couper le fuselage en deux pour le distribuer entre les deux processeurs restant.
 
 Dans ces cas-là il devient important de bien découper ses problèmes pour qu'aux frontières tout se passent bien (je rappelle que l'on calcule les solutions aux points des maillages et que si ils ne coincident pas on peut commencer à avoir des problèmes) avec un peu de recouvrement pour que les informations de la solution à chercher puissent se propager entre les "domaines".
 
 ## Les solutions informatiques qui existent et les problèmes afférents
 
-Il existent une grande quantité de librairies logicielles qui existent pour réaliser ces différentes opérations, les plus connues se nomment BLAS (pour Basic Linear Algebra Solvers), Linpack ou encore LAPACK (pour Linear Algebra Package) qui fournissent des outils pour résoudre des parties des problèmes informatiques.
+Il existent une grande quantité de librairies logicielles qui existent pour réaliser ces différentes opérations, les plus connues se nomment BLAS[^blas]  (pour Basic Linear Algebra Solvers), Linpack ou encore LAPACK[^lapack]  (pour Linear Algebra Package) qui fournissent des outils pour résoudre des parties des problèmes informatiques.
 
-A savoir que ces librairies ont été écrites en Fortran, l'un des tout premiers langages informatiques de haut-niveau créé dans les années 50 et encore toujours roi dans le monde de la simulation informatique.
+A savoir que ces librairies ont été écrites en Fortran[^fortranwp], l'un des tout premiers langages informatiques de haut-niveau créé dans les années 50 et encore toujours roi dans le monde de la simulation informatique.
 
 Je l'ai survolé, mais l'informatique en terme de matériel et de logiciel a évolué de manière conjointe. Comme je l'expliquais, on est passé de discrétisation avec des différences finies et des méthodes de type ADI peu gourmande en mémoire dans les années 50-60, à des méthodes plus complexes comme les éléments finis par la suite. On a vu aussi grandir les maillages qui n'avait que de petites tailles pour des problèmes de taille mémoire et disque à des problèmes qui font maintenant plusieurs dizaines voire centaines de millions d'inconnues et qui prennent ainsi plusieurs giga-octets de RAM.
 On a aussi du paralléliser les algorithmes pour pouvoir tirer partie des super-calculateur et leur puissance répartie.
@@ -173,31 +198,35 @@ Quelque chose qui s'est développé ces dernières années à notamment été l'
 
 Il y a quand même quelques inconvénients :
 
- * Avant que qu'OpenCL n'arrive, voire même CUDA avant lui (deux "langages dédié à l'usage de GPU") il était nécessaire de manier les structures de données propres aux jeux vidéos pour en tirer partie. Ce n'était pas très évident et plus du domaine de la bidouille qu'autre chose. Maintenant cela est plus simple, et un certain nombre de code de calcul se mettent à en tirer partie.
+ * Avant que qu'OpenCL[^openclwp] n'arrive, voire même CUDA [^cudawp] avant lui (deux "langages dédié à l'usage de GPU") il était nécessaire de manier les structures de données propres aux jeux vidéos pour en tirer partie. Ce n'était pas très évident et plus du domaine de la bidouille qu'autre chose. Maintenant cela est plus simple, et un certain nombre de code de calcul se mettent à en tirer partie.
  * Cependant les limitations en terme de mémoire de ces cartes (si on a plus de données que la place disponible dans la carte, on va adresser la mémoire centrale de l'ordinateur et l'on perd tout l'intérêt) et de précision numérique (les cartes ne calcul qu'avec des entiers de base et pas des nombres réels) font que les performances mirobolantes annoncées par Nvidia notamment en font revenir plus d'un vers le calcul plus classique 
 
-Une des alternatives qui commence à arriver serait l'usage (comme il y a bien longtemps) de co-processeurs spécialisés à cette tâche comme les Xeon-Phi de chez Intel.
+Une des alternatives qui commence à arriver serait l'usage (comme il y a bien longtemps) de co-processeurs spécialisés à cette tâche comme les Xeon-Phi[^xeonphi] de chez Intel.
 
 ## Linpack, le top500, le green500
 
 Un effet collatéral étonnant a été que l'usage de la librairie Linpack pour évaluer la performance crête des super-calculateurs. L'idée était en effet de mesure la performance des systèmes informatiques pour la résolution d'un système liénaire basé sur les fonctions fournies par la librairie.
 
-Pendant longtemps ce logiciel a été à la base du Top500, le classement des 500 calculateurs les plus puissants du monde. Puis avec l'avènement des cartes graphiques qui en puissance brute sont intéressantes, mais en usage réel assez peu utilisables et les problématiques de grandes données qui ne sont pas très bien prises en compte par ce test, différents autres classements sont apparus avec le Green500 notamment qui estime plutôt la performance énergétique d'un système informatique.
+Pendant longtemps ce logiciel a été à la base du Top500[^top500], le classement des 500 calculateurs les plus puissants du monde. Puis avec l'avènement des cartes graphiques qui en puissance brute sont intéressantes, mais en usage réel assez peu utilisables et les problématiques de grandes données qui ne sont pas très bien prises en compte par ce test[^linpacklim], différents autres classements sont apparus avec le Green500 [^green500] notamment qui estime plutôt la performance énergétique d'un système informatique.
 
 Il est en effet devenu crucial de gérer correctement les problématiques d'énergie, car la puissance de calcul de ces moyens informatiques gradissant, la consommation énergétique va de pair et ceci sans parler de la consommation électrique des climatisations nécessaires pour refroidir les serveurs. Pour info, aujourd'hui, il faut quasiment autant d'énergie pour la climatisation que pour les serveurs.
 
-Avec près de 17 000 coeurs de calcul au CC-IN2P3 (le centre de calcul qui possédait les données du LHC concernant le boson de Higgs) et les 20 Peta-octets de stockage sur disque et sur bande, il est nécessaire de disposer d'une alimentation de plusieurs mégawatts !
+Avec près de 17 000 coeurs de calcul au CC-IN2P3[^ccin2p3]  (le centre de calcul qui possédait les données du LHC concernant le boson de Higgs) et les 20 Peta-octets de stockage sur disque et sur bande, il est nécessaire de disposer d'une alimentation de plusieurs mégawatts !
 
-# Notes
+# Conclusions
 
-## Différences entre la description lagrangienne et la description eulerienne
+Voilà, j'ai tenté de dresser un panorama de ce que me semble être la simulation numérique avec :
 
-Il est utile de rappeler que deux points de vue peuvent être adoptés pour décrire le mouvement dans un milieu continu :
+ * Un premier podcast plutôt général sur la simulation, les problématiques auxquelles elle tente de répondre, avec quelques exemples et notamment la première qui fut mise en place dans les années 50.
+ * Un second plutôt cette fois orienté sur les méthodes dédiées aux EDP avec des infos plus mathématiques et informatiques sur les méthodes de discrétisations, comment on implémente cela sur des serveurs et finalement quelques digressions plus large sur les impacts des technologies dans le domaine.
 
- * La description lagrangienne suit chaque particule le long de sa trajectoire : la valeur d'une variable (température, pression, vitesse…) dépend de l'instant $t$ et de la particule considérée (identifiée par sa position $\vec{\xi}$ à l'instant $t_0$ de référence).
- * La description eulérienne est associée à un repère indépendant du mouvement du fluide, généralement fixe : la valeur des variables fluides dépend alors du temps t et de la position d'observation $\vec{x}$.
+Il est finalement important de voir que la simulation :
 
-La description lagrangienne est peut-être plus intuitive mais revêt un inconvénient majeur pour décrire les fluides : contrairement aux solides, les particules peuvent se déplacer librement dans la totalité d'un domaine fluide. L'analyse d'un écoulement est alors une tâche très ardue (on ne peut même pas exprimer un gradient par exemple, car on ne connait pas les particules voisines !). On préfère donc très largement utiliser un point de vue eulérien pour décrire le mouvement d'un fluide. La difficulté réside alors dans le fait que la conservation de la quantité de mouvement est physiquement vérifiée uniquement si l'on considère une particule fluide. Or la particule $\vec{\xi}$ (variable de Lagrange) coïncidant avec le point d'observation $\vec{x}$ (variable d'Euler) change à chaque instant $t$. En termes plus imagés, le randonneur qui observe un point fixe de la rivière n'a jamais les mêmes particules fluides sous les yeux. En particulier, il n'y a aucune raison pour qu'au point $\vec{x}$ il voie la même particule aux instants $t$ et $t + \delta t$. Comment peut-il alors calculer la vitesse ou l'accélération de la particule fluide qu'il a instantanément sous les yeux ?
+* Est indispensable pour la science aujourd'hui pour continuer de comprendre les phénomènes qui nous entoure, et que cela ne va pas aller en diminuant
+* Est la source de nouveaux challenges qui ont des impacts dans nos vies de tous les jours (Cloud, Big Data, etc)
+* Est sortie depuis longtemps du domaine scientifique et le monde du jeu vidéo profite depuis quelques années des avancées dans ce domaine, MS Flight Simulator était l'un des premiers, maintenant on parle notamment de moteur physique, de simulation de vagues, etc. GTA IV en est un des exemples les plus récents.
+
+En espérant que vous aurez appris plein de choses et que vous aurez trouver cela intéressant, je vous remercie de m'avoir laissé en parlé :)
 
 [^siminfowp]: [http://fr.wikipedia.org/wiki/Simulation_informatique](http://fr.wikipedia.org/wiki/Simulation_informatique)
 [^princsuppwp]: [http://fr.wikipedia.org/wiki/Principe_de_superposition](http://fr.wikipedia.org/wiki/Principe_de_superposition)
@@ -216,3 +245,33 @@ La description lagrangienne est peut-être plus intuitive mais revêt un inconv�
 [^diffinies]: [http://pauillac.inria.fr/~weis/info/histoire_de_l_info.html](http://pauillac.inria.fr/~weis/info/histoire_de_l_info.html)
 [^docinsa]: [http://docinsa.insa-lyon.fr/polycop/download.php?id=104080&id2=1](http://docinsa.insa-lyon.fr/polycop/download.php?id=104080&id2=1)
 [^volfiniswp]: [http://fr.wikipedia.org/wiki/M%C3%A9thode_des_volumes_finis](http://fr.wikipedia.org/wiki/M%C3%A9thode_des_volumes_finis)
+[^difffinwp]: [http://fr.wikipedia.org/wiki/Diff%C3%A9rence_finie](http://fr.wikipedia.org/wiki/Diff%C3%A9rence_finie)
+[^navierstokeswp]: [http://fr.wikipedia.org/wiki/%C3%89quations_de_Navier-Stokes](http://fr.wikipedia.org/wiki/%C3%89quations_de_Navier-Stokes)
+[^pauillac]: [http://pauillac.inria.fr/~weis/info/histoire_de_l_info.html](http://pauillac.inria.fr/~weis/info/histoire_de_l_info.html)
+[^difffinwp2]: [http://fr.wikipedia.org/wiki/M%C3%A9thode_des_diff%C3%A9rences_finies](http://fr.wikipedia.org/wiki/M%C3%A9thode_des_diff%C3%A9rences_finies)
+[^emformwp]: [http://fr.wikibooks.org/wiki/M%C3%A9thode_des_%C3%A9l%C3%A9ments_finis/Formulation](http://fr.wikibooks.org/wiki/M%C3%A9thode_des_%C3%A9l%C3%A9ments_finis/Formulation)
+[^emrappelswp]: [http://fr.wikibooks.org/wiki/M%C3%A9thode_des_%C3%A9l%C3%A9ments_finis/Rappels_de_m%C3%A9canique](http://fr.wikibooks.org/wiki/M%C3%A9thode_des_%C3%A9l%C3%A9ments_finis/Rappels_de_m%C3%A9canique)
+[^empreswp]: [http://fr.wikibooks.org/wiki/M%C3%A9thode_des_%C3%A9l%C3%A9ments_finis/Pr%C3%A9sentation_g%C3%A9n%C3%A9rale](http://fr.wikibooks.org/wiki/M%C3%A9thode_des_%C3%A9l%C3%A9ments_finis/Pr%C3%A9sentation_g%C3%A9n%C3%A9rale)
+[^efmwp]: [http://fr.wikipedia.org/wiki/M%C3%A9thode_des_%C3%A9l%C3%A9ments_finis](http://fr.wikipedia.org/wiki/M%C3%A9thode_des_%C3%A9l%C3%A9ments_finis)
+[^dynastruct]: [http://laurent.baillet.voila.net/cours_Dyna_struct.pdf](http://laurent.baillet.voila.net/cours_Dyna_struct.pdf)
+[^divergencewp]: [http://fr.wikipedia.org/wiki/Divergence_(analyse_vectorielle)](http://fr.wikipedia.org/wiki/Divergence_(analyse_vectorielle))
+[^fluxdivwp]: [http://fr.wikipedia.org/wiki/Th%C3%A9or%C3%A8me_de_flux-divergence](http://fr.wikipedia.org/wiki/Th%C3%A9or%C3%A8me_de_flux-divergence)
+[^directmeth]: [http://sfb649.wiwi.hu-berlin.de/fedc_homepage/xplore/ebooks/html/csa/node37.html](http://sfb649.wiwi.hu-berlin.de/fedc_homepage/xplore/ebooks/html/csa/node37.html)
+[^itermethwp]: [http://en.wikipedia.org/wiki/Iterative_method](http://en.wikipedia.org/wiki/Iterative_method)
+[^cranicwp]: [http://en.wikipedia.org/wiki/Crank%E2%80%93Nicolson_method](http://en.wikipedia.org/wiki/Crank%E2%80%93Nicolson_method)
+[^rkwp]: [http://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods](http://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods)
+[^eulerwp]: [http://en.wikipedia.org/wiki/Backward_Euler_method](http://en.wikipedia.org/wiki/Backward_Euler_method)
+[^krylovwp]: [http://en.wikipedia.org/wiki/Krylov_subspace](http://en.wikipedia.org/wiki/Krylov_subspace)
+[^gcwp]: [http://en.wikipedia.org/wiki/Conjugate_gradient](http://en.wikipedia.org/wiki/Conjugate_gradient)
+[^adiwp]: [http://en.wikipedia.org/wiki/Alternating_direction_implicit_method](http://en.wikipedia.org/wiki/Alternating_direction_implicit_method)
+[^ddmwp]: [http://en.wikipedia.org/wiki/Domain_decomposition_methods](http://en.wikipedia.org/wiki/Domain_decomposition_methods)
+[^blas]: [http://www.netlib.org/blas/](http://www.netlib.org/blas/)
+[^lapack]: [http://www.netlib.org/lapack/](http://www.netlib.org/lapack/)
+[^fortranwp]: [http://fr.wikipedia.org/wiki/Fortran](http://fr.wikipedia.org/wiki/Fortran)
+[^openclwp]: [http://fr.wikipedia.org/wiki/OpenCL](http://fr.wikipedia.org/wiki/OpenCL)
+[^cudawp]: [http://fr.wikipedia.org/wiki/Compute_Unified_Device_Architecture](http://fr.wikipedia.org/wiki/Compute_Unified_Device_Architecture)
+[^xeonphi]: [http://www.intel.fr/content/www/fr/fr/processors/xeon/xeon-phi-detail.html](http://www.intel.fr/content/www/fr/fr/processors/xeon/xeon-phi-detail.html)
+[^top500]: [http://www.top500.org/](http://www.top500.org/)
+[^green500]: [http://www.green500.org/](http://www.green500.org/)
+[^linpacklim]: [http://www.zdnet.fr/actualites/supercalculateurs-le-top500-annonce-un-changement-de-methode-de-calcul-39792356.htm](http://www.zdnet.fr/actualites/supercalculateurs-le-top500-annonce-un-changement-de-methode-de-calcul-39792356.htm)
+[^ccin2p3]: [http://cc.in2p3.fr/Le-parc-informatique](http://cc.in2p3.fr/Le-parc-informatique)
