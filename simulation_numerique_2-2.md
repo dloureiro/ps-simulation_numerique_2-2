@@ -12,7 +12,7 @@ Je ne l'avais pas forcément expliqué, mais il y a plusieurs types de simulatio
  * La simulation par agents, où la simulation est segmentée en différentes entités qui interagissent entre elles. Elle est surtout utilisée dans les simulations économiques et sociales, où chaque agent représente un individu ou un groupe d’individus. Par nature, son fonctionnement est asynchrone.
  * La simulation continue, où le système se présente sous la forme d’équations différentielles à résoudre. 
 
-Dans la suite de ce podcast, je vais sûrement me pencher sur la simulation continue.
+Dans la suite de ce podcast, je vais plus particulièrement me pencher sur la simulation continue.
 
 Il existe d'ailleurs différentes méthodes de simulation, avec par exemple les méthodes de monte-carlo comme nous l'avons vu dans le précédent podcast, mais aussi les simulation atomistiques (pour certaines appelées ab initio) dont un exemple serait l'étude de l'eau avec un travail au niveau des atomes, puis des molécules, puis de la masse globale ou encore celles dont je vais parler qui sont les méthodes de discrétisation.
 
@@ -70,10 +70,10 @@ Ces conditions aux limites vont être ainsi de plusieurs types [^condlimiteswp] 
  * *Les conditions aux limites en temps* : assez souvent on va imposer des conditions à $t=0$ qui vont par exemple être les conditions initiales d'une simulation en météorologie. On peut aussi imposer des conditions à $t=+\inf$, mais je n'ai pas trouvé d'exemple assez parlant de l'usage de telles conditions aux limites.
  * *Les conditions aux limites en espace* : il y en a de différents types, voici les plus classiques :
     * Condition aux limites de Dirichlet[^conddirichletwp]  (nommée d'après Johan Dirichlet, 1805-1859, mathématicien allemand ayant notamment travaillé sur les séries de Fourier, l'arithmétique et on lui doit l'essentiel de la démonstration du dernier théorème de Fermat pour le cas où l'exposant est égal à 5[^dirichletwp]) : on spécifie la valeur que va prendre la solution des équations en certaines frontières ou limites du domaine étudié (pour un intervalle $[a,b]$ on aura donc $y(a)=\alpha$ et $y(b)=\beta$). Un exemple est la valeur de la température en $a$ pour l'équation de la chaleur.
-    * Conditions aux limites de Neumann[^condneumannwp]  (nommée d'après Carl Neumann[^carlneumannwp] et pas John Van Neumann, 1832-925 et il travailla notamment sur les équations intégrales dont l'une des indéterminées est une intégrales et dont les équations de Maxwell sont l'un des plus célèbres représentants[^eqintegwp]) : on spécifie la valeur que va prendre la dérivée de la solution des équations en certaines frontières du domaine (pour un intervalle $[a,b]$ on aura donc $y'(a)=\alpha$ et $y'(b)=\beta$). L'exemple est le flux de température, toujours pour l'équation de la chaleur.
-    * Condition aux limites de Robin[^condrobinwp]  (nommée d'après Victor Gustave Robin, 1855-1897, et non pas notre Robin national, qui a notamment travaillé sur des problèmes de thermodynamique) : ici il s'agit d'imposer aux limites du domaines un relation linéaire entre les valeurs de la fonction et celle de sa dérivée (pour un intervalle $[a,b]$, on aura donc $\alpha.y(a) - \beta.y'(a)=g(a)$ et $\alpha.y(b) - \beta.y'(b)=g(b)$ avec cette fois, $\alpha$, $\beta$ et $g$ des fonctions). L'exemple de ce type de condition est un peu plus complexe mais si on reprend notre exemple d'équation de la chaleur, si un bord est en contact avec un autre milieu, les lois de newton et de Fourier précise que le flux de températere à cette interface est proportionnel à la différence de température, mais aussi à la valeur du gradient [^excondrobin].
+    * Conditions aux limites de Neumann[^condneumannwp]  (nommée d'après Carl Neumann[^carlneumannwp] et pas John Van Neumann, 1832-1925 et il travailla notamment sur les équations intégrales dont l'une des indéterminées est une intégrales et dont les équations de Maxwell sont l'un des plus célèbres représentants [^eqintegwp]) : on spécifie la valeur que va prendre la dérivée de la solution des équations en certaines frontières du domaine (pour un intervalle $[a,b]$ on aura donc $y'(a)=\alpha$ et $y'(b)=\beta$). L'exemple est le flux de température, toujours pour l'équation de la chaleur.
+    * Condition aux limites de Robin[^condrobinwp]  (nommée d'après Victor Gustave Robin, 1855-1897, et non pas notre Robin national, qui a notamment travaillé sur des problèmes de thermodynamique) : ici il s'agit d'imposer aux limites du domaines un relation linéaire entre les valeurs de la fonction et celle de sa dérivée (pour un intervalle $[a,b]$, on aura donc $\alpha.y(a) - \beta.y'(a)=g(a)$ et $\alpha.y(b) - \beta.y'(b)=g(b)$ avec cette fois, $\alpha$, $\beta$ et $g$ des fonctions). L'exemple de ce type de condition est un peu plus complexe mais si on reprend notre exemple d'équation de la chaleur, si un bord est en contact avec un autre milieu, les lois de newton et de Fourier précise que le flux de température à cette interface est proportionnel à la différence de température, mais aussi à la valeur du gradient [^excondrobin].
 
-A côté de ces conditions aux limites en espace, on en a encore qui sont plus siouxes avec par exempledes conditions aux limites dynamiques qui ressemblent aux conditions de robin, mais qui évoluent au cours du temps et fonction des points de la frontière[^condlimdynwp].
+A côté de ces conditions aux limites en espace, on en a encore qui sont plus siouxes avec par exemple des conditions aux limites dynamiques qui ressemblent aux conditions de robin, mais qui évoluent au cours du temps et fonction des points de la frontière[^condlimdynwp].
 
 ### Différences finies
 
@@ -112,7 +112,15 @@ on se retrouve, grâce aux opérateurs discrétisés à n'avoir affaire qu'à un
 
 Ainsi pour tous les points du domaine, on a une une relation entre différentes valeurs de la fonction aux points du maillage. Si on représente par un vecteur $f$ dont les différentes valeurs sont celles de la solution aux points du maillage, on peut représenter cela par le produit entre une matrice (qui va exprimer cette relation) et le vecteur qui correspond à la solution. C'est ce système linéaire que l'on cherche ensuite à résoudre avec des algorithmes.
 
-Pour information[^pauillac] : à partir du 18ème siècle des mathématiciens se sont mis à utiliser des développments de Taylor, et donc les différences finies pour mettre en place des abaques notamment pour les logarithmes et la trigonométrie qui étaient utilisés pour le cadastre, la navigation, l'artillerie, les statistiques, le calcul d'intérêts ou encore l'astronomie. Comme ceux-ci nécessitaient de grands nombres d'opérations de calcul, des mathématiciens et inventeurs se sont mis à tenter la mise en place de machines permettant le calcul "automatique" de ces différences finies. Le premier à presque y arriver fut Charles Baggage entre 1820 et 1843 (il n'y arriva pas complètement) et le Suédois George SCHEUTZ (1785-1873) y arriva en 1840. A savoir que ce type de machine a été utilisé jusque dans les année 1930.
+Pour information [^pauillac] : à partir du 18ème siècle des mathématiciens se sont mis à utiliser des développements de Taylor, et donc les différences finies pour mettre en place des abaques notamment pour les logarithmes et la trigonométrie qui étaient utilisés pour le cadastre, la navigation, l'artillerie, les statistiques, le calcul d'intérêts ou encore l'astronomie. Comme ceux-ci nécessitaient de grands nombres d'opérations de calcul, des mathématiciens et inventeurs se sont mis à tenter la mise en place de machines permettant le calcul "automatique" de ces différences finies. Le premier à presque y arriver fut Charles Baggage entre 1820 et 1843 (il n'y arriva pas complètement) et le Suédois George SCHEUTZ (1785-1873) y arriva en 1840. A savoir que ce type de machine a été utilisé jusque dans les année 1930.
+
+#### Remarques et limitations
+
+L'un des problèmes des différences finies vient du maillage qui est forcément à base de carrés ou de rectangle et que ceci ne permet pas assez efficacement d'approcher des formes qui peuvent être complexes (pour un cercle par exemple, on va retrouver assez peu de points qui seront sur la frontière et qui permettront donc d'exprimer les conditions aux limites).
+
+On le verra aussi avec les éléments finis, mais le contexte mathématique associé permet la mise en place de preuves plus rigoureuses pour les éléments finis.
+
+Une des différences majeures entre les différences finies et les deux méthodes suivantes est aussi le fait qu'ici on approxime des dérivées alors qu'avec les éléments finis ou les volumes finis, on approxime les intégrales.
 
 ### Éléments finis
 
@@ -130,6 +138,16 @@ Pour information, cette méthode des éléments finis est extrêment répandu da
 
 Pour ceux que cela intéresse, vous pourrez trouver une liste assez longue de cours sur le sujet dans les références[^emformwp]  [^emrappelswp]  [^empreswp]  [^efmwp]  [^dynastruct].
 
+#### Remarques et limitations
+
+Par opposition aux différences finies, ici le maillage peut-être beaucoup plus adapté aux géométries considérées, on peut grâce à des éléments triangulaires notamment obtenir des solutions plus fidèles et obtenir le nombre de points suffisants pour les conditions aux limites.
+
+Il est aussi important de noter que le contexte mathématique est bien plus poussé pour les éléments finis que pour les différences finies.
+
+Il faut cependant noter qu'il est nécessaire d'imposer une certaine régularité aux fonctions considérées : les solutions doivent notamment être suffisamment continues et différentiables. Et ceci peut poser des difficultés pour des problèmes d'électromagnétisme notamment ou les solutions peuvent observer de fortes discontinuités sur les domaines étudiées.
+
+Enfin, les maillages complexes voire non-structurés (utilisation de mailles triangulaires, quadrilatères, voire autres) peuvent aussi complexifier les résolutions et il est parfois nécessaire de changer les maillages en faisant de l'interpolation pour revenir à des maillages dits structurés.
+
 ### Volumes finis
 
 De la même manière que pour les éléments finis, la méthode des volumes finis travaille sur les intégrales des EDP étudiées. A la différence des éléments finis où l'on travaille plutôt sur ce que l'on appelle la formulation variationnelle ou formulation faible (on a réduit le niveau de dérivation entre autres) on travaille ici directement sur la formulation forte [^volfiniswp].
@@ -138,59 +156,67 @@ En fait, cette méthodes des volumes finis a d'abord été appliquée aux lois d
 
 Grâce à un théorème dit de flux-divergence[^fluxdivwp], on transforme des équations sur des volumes (autour des points du maillage) en des équations sur des surfaces et comme les équations sont conservatives, le flux qui entre est égal au flux qui sort donc cela s'y prête bien.
 
-A la différence des éléments finis, la méthode des volumes finis est simplement utilisable sur des maillages dit non-structurés (comme on ne se soucie pas du maillage, on peut mélanger des triangles avec des carrés, etc. Ceci est plus compliqué avec la méthode des éléments finis).
+A la différence des éléments finis, la méthode des volumes finis est adaptée à des maillages dit non-structurés (comme on ne se soucie pas du maillage, on peut mélanger des triangles avec des carrés, etc. Ceci est plus compliqué avec la méthode des éléments finis).
+
+De plus il est ici question de considérer des valeurs moyennes de la fonction recherchée sur les volumes considérés. Les conditions imposées de continuité et de dérivabilité nécessaires avec les éléments finis sont donc relaxées et permettent de résoudre des problèmes sur lesquels ces derniers pèchent parfois.
 
 ## Résolution de systèmes linéaires
 
-Une fois que ces méthodes de discrétisation nous ont permis d'obtenir des systèmes liénaires à résoudre, il est nécessaire de mettre en place des algorithmes de résolution du système obtenu.
+Une fois que ces méthodes de discrétisation nous ont permis d'obtenir des systèmes linéaires à résoudre, il est nécessaire de mettre en place des algorithmes de résolution du système obtenu.
 
 Grosso modo, l'idée est d'inverser la matrice $A$ pour que l'on puisse se retrouver avec $x = A^{-1}.b$. Sauf que cela n'est pas forcément évident quand on parle de matrices. Je ne reviendrais pas sur la question car elle a notamment été abordé dans de précédents podcasts je crois quand il était question de commutativité de la multiplication quand il est question de matrice.
 
 Il existe ainsi différentes méthodes que l'on pourra classer dans deux grandes catégories :
 
-* Les méthodes directes[^directmeth]
+* Les méthodes directes [^directmeth]
 * Les méthodes itératives [^itermethwp]
 
-Je vais ici me concentrer sur les méthodes qui servent à la résolution de systèmes en régime stationnaire (ne dépendant pas du temps). Quand le temps intervient on va utiliser d'autres méthodes comme les méthodes de d'Euler[^eulerwp], de Crank-Nicolson[^cranicwp], de Runge-Kutta[^rkwp], etc.
+Je vais ici me concentrer sur les méthodes qui servent à la résolution de systèmes en régime stationnaire (ne dépendant pas du temps). Quand le temps intervient on va utiliser d'autres méthodes comme les méthodes de d'Euler[^eulerwp], de Crank-Nicolson [^cranicwp], de Runge-Kutta [^rkwp], etc.
 
-A noter un point intéressant : pour certains problèmes stationnaires, on peut-être amené à transformer un problème stationnaire en problème quasi-stationnaire (avec un petit terme en temps qui va apparaître dans la matrice) afin qu'ils soient plus simple à résoudre (le fait que l'on augmente artificiellement les termes sur la diagonale de la matrice améliore la capacité des algorithmes utilisés ensuite à converger vers la bonne solution). On va alors utiliser, pour chaque pas de temps une méthode directe ou itérative pour résoudre une équation à un temps donné, et ensuite une méthode comme celles citées un peu plus haut pour résoudre le problème quasi-stationnaire dont la solution sera celle du problème stationnaire.
+A noter un point intéressant : pour certains problèmes stationnaires, on peut-être amené à les transformer en problèmes quasi-stationnaires (avec un petit terme en temps qui va apparaître dans la matrice) afin qu'ils soient plus simple à résoudre (le fait que l'on augmente artificiellement les termes sur la diagonale de la matrice améliore la capacité des algorithmes utilisés ensuite à converger vers la bonne solution). On va alors utiliser, pour chaque pas de temps une méthode directe ou itérative pour résoudre une équation à un temps donné, et ensuite une méthode comme celles citées un peu plus haut pour résoudre le problème quasi-stationnaire dont la solution sera celle du problème stationnaire.
 
 ### Les méthodes directes
 
-Les méthodes directives permettent théoriquement d'aboutir à la solution exacte du système liénaire.
-La plus classique est celle dite du pivot de Gauss ou d'élimination de Gauss-Jordan. Le but est en fait de se débrouille pour arriver à inverser la matrice (en gros). Le problème de ces méthodes, c'est qu'elles peuvent être longues et qu'elles peuvent amener des problèmes numériques pendant l'inversion (notamment quand on va devoir diviser par des nombres petits, des choses comme ça), même si à priori elles permettent d'obtenir la solution exacte.
+Les méthodes directives permettent théoriquement d'aboutir à la solution exacte du système linéaire.
+La plus classique est celle dite du pivot de Gauss ou d'élimination de Gauss-Jordan. Le but est en fait de se débrouille en différentes étapes à inverser la matrice (en gros). Le problème de ces méthodes, c'est qu'elles peuvent être longues et qu'elles peuvent amener des problèmes numériques pendant l'inversion (notamment quand on va devoir diviser par des nombres petits, des choses comme ça), même si à priori elles permettent d'obtenir la solution exacte.
 
 ### Les méthodes itératives. 
 
 Celles-ci propose de partir d'une solution $x_0$ et d'ensuite minimiser une fonction où entre en jeu la matrice et le second membre. Pour que tout se passe bien, il est nécessaire que $x_0$ soit proche de la solution finale.
 
-Une méthode (méthodes dites de Krylov[^krylovwp]) qui trouve différentes implémentations utilisées dans les codes de calcul aujourd'hui est la suivante : L'idée est de définir des vecteurs au fur et à mesure des itérations avec comme contraint qu'ils soient dit conjugué ou orthogonaux avec un certain produit scalaire (où entre en jeu la matrice du système linéaire). Cette condition implique d'ailleurs un certain nombre de propriété sur la matrice du système). L'idée est en fait de créer une base de $\mathbb{R}^n$ avec des vecteurs orthogonaux entre eux et dont la solution en construction est une combinaison linéaire. On voit donc en fait qu'une fois constitué autant de vecteur orthogonaux que la taille de l'espace, on se retrouve avec une solution théoriquement exacte.
-Les algorithmes les plus connus implémentant cette méthode vont être ceux nommés GMRES, Gradient conjugué[^gcwp], etc. 
+Un exemple de ces méthode (méthodes dites de Krylov[^krylovwp]) qui trouve différentes implémentations utilisées dans les codes de calcul aujourd'hui est le suivant : L'idée est de définir des vecteurs au fur et à mesure des itérations avec comme contrainte qu'ils soient dit conjugués ou orthogonaux avec un certain produit scalaire (où entre en jeu la matrice du système linéaire). Cette condition implique d'ailleurs un certain nombre de propriétés sur la matrice du système. L'idée est en fait de créer une base de $\mathbb{R}^n$ avec des vecteurs orthogonaux entre eux et dont la solution en construction est une combinaison linéaire. On voit donc en fait qu'une fois constitué autant de vecteurs orthogonaux que la taille de l'espace, on se retrouve avec une solution théoriquement exacte (en ce sens on pourrait parler de méthode directe).
+
+Les algorithmes les plus connus implémentant cette méthode vont être ceux nommés GMRES, Gradient Conjugué [^gcwp], etc. 
+
+En fait on n'ira pas jusqu'à un nombre d'itérations qui correspond à la taille du problème, on va plutôt considérer une erreur que l'on cherchera à faire aller sous un certain niveau au-dessous duquel la solution sera considérée comme satisfaisante.
 
 ![Représentation de la convergence de la méthode du gradient conjugué](images/500px-Conjugate_gradient_illustration.svg.png "Représentation de la convergence de la méthode du gradient conjugué")
 
-A noter que la méthode ADI[^adiwp] a été l'une des premières qui fut mise en place car elle se basait sur les différences finies (relativement moins complexes que les autres méthodes de discrétisation) et prenait peu de place en mémoire (la matrice avait beaucoup de zéros et seules des bandes le long de la diagonales étaient non-nulles). Ces méthodes peuvent diverger, et il est donc important d'avoir une solution initiale pas trop "mauvaise", mais aussi que la matrice aient de bonnes propriétés (conditionnement, etc).
+A noter que la méthode ADI[^adiwp] a été l'une des premières qui fut mise en place car elle se basait sur les différences finies (relativement moins complexes que les autres méthodes de discrétisation) et prenait peu de place en mémoire (la matrice avait beaucoup de zéros et seules des bandes le long de la diagonale étaient non-nulles). Ces méthodes peuvent diverger, et il est donc important d'avoir une solution initiale pas trop "mauvaise", mais aussi que la matrice aient de bonnes propriétés que je n'aborderais pas ici (conditionnement notamment).
 
-Quand les systèmes linéaires à résoudre deviennent trop gros et que l'on a à disposition des serveurs informatiques avec de multiples processeurs, voire même plusieurs serveurs informatiques, on peut paralléliser ces algorithmes.
+Quand les systèmes linéaires à résoudre deviennent trop gros et que l'on a à disposition des serveurs informatiques avec de multiples processeurs, voire même plusieurs serveurs informatiques, on peut tenter de paralléliser ces algorithmes.
 
-Pléthore de littérature existe sur la question, et on peut faire ce que l'on appelle de la décomposition de domaine[^ddmwp]. Si on dispose de quatre processeurs et que l'on veut simuler la modification de structure d'un avion en vol, on va par exemple faire calculer la solution sur chaque aile à l'un d'entre eux et on va couper le fuselage en deux pour le distribuer entre les deux processeurs restant.
+Pléthore de littérature existe sur la question, et on peut faire ce que l'on appelle de la décomposition de domaine par exemple[^ddmwp]. Si on dispose de quatre processeurs et que l'on veut simuler la modification de structure d'un avion en vol, on va par exemple faire calculer la solution sur chaque aile à l'un d'entre eux et on va couper le fuselage en deux pour le distribuer entre les deux processeurs restant.
 
 Dans ces cas-là il devient important de bien découper ses problèmes pour qu'aux frontières tout se passent bien (je rappelle que l'on calcule les solutions aux points des maillages et que si ils ne coincident pas on peut commencer à avoir des problèmes) avec un peu de recouvrement pour que les informations de la solution à chercher puissent se propager entre les "domaines".
 
+Ces méthodes de découpage du domaines en différents sous-éléments qui seront répartis sur des processeurs ou des serveurs vont impliquer des temps de communication pour transférer les informations aux frontières de chacun de ces sous-domaines. Et si l'on découpe trop, il peut arriver que l'algorithme global passe plus de temps à transférer des données qu'à calculer effectivement. Il est donc bon de découper de manière efficace son domaine et d'essayer de "recouvrir" le temps passé à communiquer des informations par du calcul.
+
 ## Les solutions informatiques qui existent et les problèmes afférents
 
-Il existent une grande quantité de librairies logicielles qui existent pour réaliser ces différentes opérations, les plus connues se nomment BLAS[^blas]  (pour Basic Linear Algebra Solvers), Linpack ou encore LAPACK[^lapack]  (pour Linear Algebra Package) qui fournissent des outils pour résoudre des parties des problèmes informatiques.
+Il existent une grande quantité de librairies logicielles qui existent pour réaliser ces différentes opérations, les plus connues se nomment BLAS[^blas]  (pour Basic Linear Algebra Solvers), Linpack, LAPACK[^lapack]  (pour Linear Algebra Package), Scalapack [^scalapack], Magma [^magma], etc qui fournissent des outils pour résoudre des parties des problèmes informatiques.
 
-A savoir que ces librairies ont été écrites en Fortran[^fortranwp], l'un des tout premiers langages informatiques de haut-niveau créé dans les années 50 et encore toujours roi dans le monde de la simulation informatique.
+A savoir que ces librairies ont été écrites en Fortran pour les plus anciennes [^fortranwp], l'un des tout premiers langages informatiques de haut-niveau créé dans les années 50 et encore toujours roi dans le monde de la simulation informatique.
 
-Je l'ai survolé, mais l'informatique en terme de matériel et de logiciel a évolué de manière conjointe. Comme je l'expliquais, on est passé de discrétisation avec des différences finies et des méthodes de type ADI peu gourmande en mémoire dans les années 50-60, à des méthodes plus complexes comme les éléments finis par la suite. On a vu aussi grandir les maillages qui n'avait que de petites tailles pour des problèmes de taille mémoire et disque à des problèmes qui font maintenant plusieurs dizaines voire centaines de millions d'inconnues et qui prennent ainsi plusieurs giga-octets de RAM.
-On a aussi du paralléliser les algorithmes pour pouvoir tirer partie des super-calculateur et leur puissance répartie.
+Je l'ai survolé, mais l'informatique en terme de matériel et de logiciel a évolué de manière conjointe. Comme je l'expliquais, on est passé de discrétisation avec des différences finies et des méthodes de type ADI peu gourmande en mémoire dans les années 50-60, à des méthodes plus complexes comme les éléments finis par la suite. On a vu aussi grandir les maillages qui n'avait que de petites tailles pour des histoires de limitation de taille mémoire et disque à des problèmes qui font maintenant plusieurs dizaines voire centaines de millions d'inconnues et qui prennent ainsi plusieurs giga-octets de RAM.
 
-Petite anecdote marrante : en 2006 j'ai fait un stage dans une société qui faisait de la simulation et un cas marquant était celui de la simulation du décollage d'un hélicoptère à turbo-réacteur. Le calcul était tellement complexe qu'il fallait près de 24 heures pour que le logiciel simule quelques dixièmes de seconde avant d'exploser sur près de 50 serveurs !
+On a aussi du paralléliser les algorithmes pour pouvoir tirer partie des super-calculateurs et de leur puissance répartie. Et maintenant on en vient même à utiliser des cartes graphiques de manière massive pour leur capacité de traitements parallèles très importante.
+
+Petite anecdote marrante : en 2006 j'ai fait un stage dans une société qui faisait de la simulation et un cas marquant était celui de la simulation du décollage d'un hélicoptère à turbo-réacteurs. Le calcul était tellement complexe qu'il fallait près de 24 heures pour que le logiciel simule quelques dixièmes de seconde avant d'exploser sur près de 50 serveurs !
 
 C'est dire la complexité des modèles considérés et des contraintes informatiques (autant logicielles que matérielles) qui existent !
 
-D'ailleurs un des problèmes qui est apparu est la question des données. J'ai parlé lors du précédent podcast de la simulation de l'univers, avec les données gigantesques générées (1,5 peta-octet utile). Ce qu'il faut savoir c'est qu'il y a eu près de 100x plus de données générées qu'il a fallu trier !!!
+D'ailleurs un des problèmes qui est apparu est la question des données. J'ai parlé lors du précédent podcast de la simulation de l'univers, avec les données gigantesques utiles produites (1,5 peta-octet utile). Ce qu'il faut savoir c'est qu'il y a eu près de 100x plus de données générées qu'il a fallu trier !!!
 
 ## Les cartes graphiques pour aider dans la simulation
 
@@ -203,13 +229,18 @@ Il y a quand même quelques inconvénients :
 
 Une des alternatives qui commence à arriver serait l'usage (comme il y a bien longtemps) de co-processeurs spécialisés à cette tâche comme les Xeon-Phi[^xeonphi] de chez Intel.
 
+Les librairies comme Magma que j'ai brièvement cité plus haut viennent remplacer les librairies vieillissantes comme Lapack en prenant en compte ces accélérateurs (co-processeurs, cartes graphiques, etc) pour la résolution des systèmes linéaires considérés. Elles permettent ainsi de facilement prendre en compte les nouveaux matériels disponibles cités ci-dessus.
+
 ## Linpack, le top500, le green500
 
-Un effet collatéral étonnant a été que l'usage de la librairie Linpack pour évaluer la performance crête des super-calculateurs. L'idée était en effet de mesure la performance des systèmes informatiques pour la résolution d'un système liénaire basé sur les fonctions fournies par la librairie.
+Un effet collatéral étonnant a été l'usage de la librairie Linpack pour évaluer la performance crête des super-calculateurs. L'idée était en effet de mesure la performance des systèmes informatiques pour la résolution d'un système linéaire basé sur les fonctions fournies par la librairie.
 
-Pendant longtemps ce logiciel a été à la base du Top500[^top500], le classement des 500 calculateurs les plus puissants du monde. Puis avec l'avènement des cartes graphiques qui en puissance brute sont intéressantes, mais en usage réel assez peu utilisables et les problématiques de grandes données qui ne sont pas très bien prises en compte par ce test[^linpacklim], différents autres classements sont apparus avec le Green500 [^green500] notamment qui estime plutôt la performance énergétique d'un système informatique.
+Pendant longtemps ce logiciel a été à la base du Top500[^top500], le classement des 500 calculateurs les plus puissants du monde. Puis avec l'avènement des cartes graphiques qui en puissance brute sont intéressantes, mais en usage réel assez peu utilisables (sans les outils adéquats en cours de développement comme Magma) et les problématiques de grandes données qui ne sont pas très bien prises en compte par ce test[^linpacklim], différents autres classements sont apparus avec le Green500 [^green500] notamment qui estime plutôt la performance énergétique d'un système informatique.
 
-Il est en effet devenu crucial de gérer correctement les problématiques d'énergie, car la puissance de calcul de ces moyens informatiques gradissant, la consommation énergétique va de pair et ceci sans parler de la consommation électrique des climatisations nécessaires pour refroidir les serveurs. Pour info, aujourd'hui, il faut quasiment autant d'énergie pour la climatisation que pour les serveurs.
+A noter par exemple que Tianhe 2, la machine la plus puissante du monde presque 3 millions de coeurs dont une grande partie correspond à des co-processeurs xeon phi possédant chacun 57 coeurs mais avec une performance énergétique (puissante linpack sur consommation énergétique) en retrait (1900 MFlops/W).
+Au contraire la machine détenue par le centre de calcul du ROMEO en Champagne-Ardennes est classée 5ème du green500 et possède une très bonne performance énergétique (3130 MFlops/W).
+
+Il est en effet devenu crucial de gérer correctement les problématiques d'énergie, car la puissance de calcul grandissante de ces moyens informatiques, la consommation énergétique va de pair et ceci sans parler de la consommation électrique des climatisations nécessaires pour refroidir les serveurs. Pour info, aujourd'hui, il faut quasiment autant d'énergie pour la climatisation que pour les serveurs.
 
 Avec près de 17 000 coeurs de calcul au CC-IN2P3[^ccin2p3]  (le centre de calcul qui possédait les données du LHC concernant le boson de Higgs) et les 20 Peta-octets de stockage sur disque et sur bande, il est nécessaire de disposer d'une alimentation de plusieurs mégawatts !
 
@@ -275,3 +306,5 @@ En espérant que vous aurez appris plein de choses et que vous aurez trouver cel
 [^green500]: [http://www.green500.org/](http://www.green500.org/)
 [^linpacklim]: [http://www.zdnet.fr/actualites/supercalculateurs-le-top500-annonce-un-changement-de-methode-de-calcul-39792356.htm](http://www.zdnet.fr/actualites/supercalculateurs-le-top500-annonce-un-changement-de-methode-de-calcul-39792356.htm)
 [^ccin2p3]: [http://cc.in2p3.fr/Le-parc-informatique](http://cc.in2p3.fr/Le-parc-informatique)
+[^scalapack]: [http://www.netlib.org/scalapack/](http://www.netlib.org/scalapack/)
+[^magma]: [http://icl.cs.utk.edu/magma/index.html](http://icl.cs.utk.edu/magma/index.html)
