@@ -6,45 +6,30 @@ Dans ce podcast j'avais mentionné le fait qu'un pas nécessaire pour la réalis
 
 Dans cet épisode nous allons voir les étapes pour "informatiser ces modèles" via la discrétisation, les problèmes auxquels on fait face, ce que l'informatique a développer comme solution pour aider au traitement de ces problèmes mathématiques, au niveau logiciel comme matériel.
 
-## Pourquoi la discrétisation ?
+## Retour sur pourquoi on simule sur ordinateur
 
-L'idée est en fait que la résolution analytique des équations de phénomènes physiques est très complexe et en dehors de cas particuliers ou alors avec des simplifications importantes impossible pour certaines équations comme par exemple celle décrivant des fluides : l'équation de Navier-Stokes[^navierstokeswp] qui possède de manière générale des termes non-linéaire.
+Il faut bien comprendre un point important : on fait de la simulation par ordinateur parce que les problèmes que l'on souhaite résoudre sont trop complexes pour être résolus "à la main" par le calcul. Les équations qui sont enseignées au lycée ou dans les classes supérieures ne sont en fait que celles pour lesquelles on peut dire quelque chose, parce qu'elles sont simples. Mais dans la vraie vie, les modèles que l'on doit utiliser pour être réaliste sont loin des cas d'école. Bien au contraire, ces équations simples ne sont que des cas très particuliers qui aident seulement à comprendre les mécanismes en jeu.
 
-![Résultat de calcul Navier-Stokes instationnaire dans une tuyère,
-illustrant le caractère tridimensionnel de l'écoulement turbulent en régime de décollement (DAAP - Sébastien Deck)](images/tuyere.jpg "Résultat de calcul Navier-Stokes instationnaire dans une tuyère,
-illustrant le caractère tridimensionnel de l'écoulement turbulent en régime de décollement
-(DAAP - Sébastien Deck)")
+Les équations des modèles que l'on utilise sont tellement complexes qu'on ne connaît jamais de solution exacte que la résolution à la main (comme on le fait pour des équations du second degré comme on nous l'a appris au lycée par exemple) nous donnerait. 
 
-Comme expliqué sur Wikipédia [^princsuppwp] : 
-On dit qu'un système de type entrée-sortie est linéaire ou relève du principe de superposition si:
- 
- * à la somme de deux entrées quelconques correspond la somme des deux sorties correspondantes,
- * à un multiple d'une entrée quelconque correspond le même multiple de la sortie correspondante.
+Si on veut modéliser un transfert de chaleur par exemple, l'exemple de base est celui de la conduction dans un barre d'un matériau quelconque. Mais dans la vraie vie, on va avoir aussi d'autres phénomènes : la convection, la radiation, une géométrie qui ressemblera peut-être plus à un radiateur (avec un forme complexe) qu'à une barre en forme de tube plein. 
 
-Dans le domaine des systèmes physiques et mécaniques, on appelle souvent l'entrée *excitation* et la sortie *réponse*.
-Plus précisément, si l'on note les excitations $f$ (par référence aux forces en mécanique) et les réponses $x$ (par référence aux mouvements générés par les forces) :
+Comme je l'avais expliqué dans le premier épisode sur la simulation numérique, la discrétisation est obligatoire pour qu'un ordinateur puisse être utilisé : cela permet de découper en plein de petits morceaux indépendants et en nombre fini les problèmes qui peuvent être ainsi traité par une machine qui ne peut pas travailler sur le continu (une ligne va posséder une infinité de points et sa version discrétisée un nombre fini).
 
- * Lorsque l'on sollicite le système par une entrée (excitation) $f_1$, la réponse (déplacement) est $x_1$ ;
- * Lorsque l'on sollicite le système par une entrée (excitation) $f_2$, la réponse (déplacement) est $x_2$ ;
+Il existe tout un tas de méthodes de discrétisation, nous aborderons l'un des plus répandues qui se nomme la méthode des différences finies. 
 
-alors le système est dit linéaire si et seulement si pour $\lambda_1$ et $\lambda_2$ deux nombres quelconques, la réponse à l'excitation $\lambda_1.f_1 + \lambda_2.f_2$ est $\lambda_1.x_1 + \lambda_2.x_2$.
+Mais avant toute chose, il faut bien comprendre que ces méthodes ne permettent pas de tout traiter. C'est comme pour les modèles, elles sont valables et valides dans certains cadres : quand les équations sont trop chaotiques, que des phénomènes de seuil critique (en dessous, rien ne se passe, et au-dessus on voit apparaître quelque chose), de saturation (au-dessus d'un seuil le comportement observé ne change pas) ou d'hystérésis (une valeur d'entrée, qu'elle soit attente en accélération ou en décélération va donner deux sorties différentes, même si c'est deux fois la même valeur) apparaissent, on arrive à leurs limites.
 
-Je vais présenter un peu en détail la plus simple des trois grandes méthodes de discrétisation (Les différences finies) et j'expliquerais le principe des deux autres (Les éléments finis, Les volumes finis). 
+On parle en fait de linéarité : quand on en met deux fois plus en entrée, on en a deux fois plus à la sortie. Chose que n'est plus respecté avec ces histoires de seuil critique ou de saturation.
 
-Chacune possède une origine spécifique et a pour rôle de permettre la transformation d'un problème basé sur des équations différentielles ou aux dérivés partielles donc plutôt de l'analyse vers un problème de résolution de système linéaire de type :
-
-$$ A.x = b $$
-
-Où $A$ est la matrice qui représente le problème, $x$ la solution à trouver et $b$ qui représente les conditions initiales/aux limites qui est un problème d'algèbre linéaire.
+Et un gros problème des modèles d'aujourd'hui c'est qu'ils sont très hautement non-linéaire. C'est pourquoi avant toute chose, on va essayer de linéariser ces équations complexes en enlevant les termes qui ne sont pas représentatifs (on néglige souvent les frottements de l'air quand on modélise un pendule par exemple), en prenant des approximations pour des cas plus simples (pour modéliser un pont on va considérer des petites déformations), d'oû provienent souvent les non-linéarités.
 
 Le travail que l'on fait finalement quand on part de zéro est donc le suivant :
 
- 1. On définit les équations du modèle qui représente le phénomène que l'on souhaite étudier avec ses conditions aux limites
- 2. On assure que la méthode de discrétisation est capable de fournir une solution unique
- 3. On ramène le problème décrit par un modèle basé sur des équations différentielles ou à dérivées partielles à un problème d'algèbre linéaire
- 4. On choisit un algorithme qui possède les bonnes propriétés pour la résolution de mon système linéaire
- 5. On implémente cet algorithme
- 6. On l'exécute (avec ou sans parallélisation)
+ 1. On définit les équations du modèle qui représente le phénomène que l'on souhaite étudier avec ses conditions aux limites (que se passe-t-il sur les bords du pont)
+ 2. On ramène le problème décrit par un modèle à quelque chose de résolvable par un ordinateur
+ 3. On assure que la méthode de discrétisation est capable de fournir une solution unique (sinon ça sert pas à grand chose, dans la vraie vie, on a pas plusieurs choix possible)
+ 4. On choisit et exécute un algorithme qui est capable de résoudre ce problème
 
 ## Définition du domaine
 
