@@ -1,20 +1,10 @@
 # La simulation numérique 2/2
 
-Maintenant que nous avons expliqué dans le précédent podcast les besoins de simulation, les problématiques rencontrées avec différents champs de recherche et la première simulation numérique de l'histoire (finir par le hasard et les probabilités et toutes ces choses que je déteste personnellement a été dur pour moi) nous allons retourner sur des équations déterministes.
+Tout d'abord, j'aimerais faire un petit retour sur le précédent podcast dédié à la simulation numérique. Dans celui-ci, nous avions abordé différents aspects : nous avions tout d'abord parlé des modèles en expliquant qu'ils sont une simplification de la réalité permettant d'en garder les éléments importants pour l'étude théorique et la simulation (comme le graphe pour le chemin permettant de passer sur les ponts de la ville de Königsberg décrit dans l'épisode de Robin). Nous avions ensuite parlé du fait que la simulation numérique permet une grande reproductibilité pour des phénomènes complexes à tester via des maquettes (comme pour les avions ou les voitures par exemple), voire impossible à expérimenter (comme la prévision du temps ou encore la cosmologie). Dans la foulée j'avais présenté l'apport de la simulation numérique et notamment des méthodes de Monté-Carlo avec la première simulation réalisé par l'équipe de John Van Neumann et quelques digressions sur l'intérêt d'une bonne source de nombres aléatoires.
 
-## Rappel sur les types de simulation
+Dans ce podcast j'avais mentionné le fait qu'un pas nécessaire pour la réalisation de simulation numérique était celui de la discrétisation des domaines d'étude. En fait cette discrétisation s'accompagne aussi de celle des équations du modèle du phénomène que l'on veut simuler : équation de la chaleur quand on cherche par exemple à savoir comment elle se transmet dans un chauffage, équation de l'élasticité quand on veut savoir comment un pont se comporte, etc.
 
-Je ne l'avais pas forcément expliqué, mais il y a plusieurs types de simulation numériques possibles [^siminfowp] :
-
- * La simulation discrète dans laquelle le système est soumis à une succession d’évènements qui le modifient. Ces simulations ont vocation à appliquer des principes simples à des systèmes de grande taille. La simulation discrète se divise en deux grandes catégories :
-    * asynchrone ou time-slicing : on simule à chaque fois le passage d’une unité de temps sur tout le système. Ce terme n'est généralement plus utilisé dans le domaine professionnel depuis l'apparition croissante des nouvelles technologies.
-    * synchrone ou event-sequencing : on calcule l’arrivée du prochain événement, et on ne simule qu’événement par événement, ce qui permet souvent des simulations rapides, bien qu’un peu plus complexes à programmer.
- * La simulation par agents, où la simulation est segmentée en différentes entités qui interagissent entre elles. Elle est surtout utilisée dans les simulations économiques et sociales, où chaque agent représente un individu ou un groupe d’individus. Par nature, son fonctionnement est asynchrone.
- * La simulation continue, où le système se présente sous la forme d’équations différentielles à résoudre. 
-
-Dans la suite de ce podcast, je vais plus particulièrement me pencher sur la simulation continue.
-
-Il existe d'ailleurs différentes méthodes de simulation, avec par exemple les méthodes de monte-carlo comme nous l'avons vu dans le précédent podcast, mais aussi les simulation atomistiques (pour certaines appelées ab initio) dont un exemple serait l'étude de l'eau avec un travail au niveau des atomes, puis des molécules, puis de la masse globale ou encore celles dont je vais parler qui sont les méthodes de discrétisation.
+Dans cet épisode nous allons voir les étapes pour "informatiser ces modèles" via la discrétisation, les problèmes auxquels on fait face, ce que l'informatique a développer comme solution pour aider au traitement de ces problèmes mathématiques, au niveau logiciel comme matériel.
 
 ## Pourquoi la discrétisation ?
 
@@ -243,6 +233,18 @@ Au contraire la machine détenue par le centre de calcul du ROMEO en Champagne-A
 Il est en effet devenu crucial de gérer correctement les problématiques d'énergie, car la puissance de calcul grandissante de ces moyens informatiques, la consommation énergétique va de pair et ceci sans parler de la consommation électrique des climatisations nécessaires pour refroidir les serveurs. Pour info, aujourd'hui, il faut quasiment autant d'énergie pour la climatisation que pour les serveurs.
 
 Avec près de 17 000 coeurs de calcul au CC-IN2P3[^ccin2p3]  (le centre de calcul qui possédait les données du LHC concernant le boson de Higgs) et les 20 Peta-octets de stockage sur disque et sur bande, il est nécessaire de disposer d'une alimentation de plusieurs mégawatts !
+
+## Rappel sur les types de simulation
+
+Je ne l'avais pas forcément expliqué, mais il y a plusieurs types de simulation numériques possibles [^siminfowp] :
+
+ * La simulation discrète dans laquelle le système est soumis à une succession d’évènements qui le modifient. Ces simulations ont vocation à appliquer des principes simples à des systèmes de grande taille. La simulation discrète se divise en deux grandes catégories :
+    * asynchrone ou time-slicing : on simule à chaque fois le passage d’une unité de temps sur tout le système. Ce terme n'est généralement plus utilisé dans le domaine professionnel depuis l'apparition croissante des nouvelles technologies.
+    * synchrone ou event-sequencing : on calcule l’arrivée du prochain événement, et on ne simule qu’événement par événement, ce qui permet souvent des simulations rapides, bien qu’un peu plus complexes à programmer.
+ * La simulation par agents, où la simulation est segmentée en différentes entités qui interagissent entre elles. Elle est surtout utilisée dans les simulations économiques et sociales, où chaque agent représente un individu ou un groupe d’individus. Par nature, son fonctionnement est asynchrone.
+ * La simulation continue, où le système se présente sous la forme d’équations différentielles à résoudre. 
+
+Il existe d'ailleurs différentes méthodes de simulation, avec par exemple les méthodes de monte-carlo comme nous l'avons vu dans le précédent podcast, mais aussi les simulation atomistiques (pour certaines appelées ab initio) dont un exemple serait l'étude de l'eau avec un travail au niveau des atomes, puis des molécules, puis de la masse globale ou encore celles dont je vais parler qui sont les méthodes de discrétisation.
 
 # Conclusions
 
