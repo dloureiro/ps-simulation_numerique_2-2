@@ -33,23 +33,17 @@ Le travail que l'on fait finalement quand on part de zéro est donc le suivant :
 
 ## Définition du domaine
 
-On a déjà parlé dans le premier podcast de ce que l'on entend par modèle, un point qu'il est important de précisé c'est qu'il faut expliquer sur quel domaine ce modèle va s'appliquer (on peut voir en physique par exemple que les théories de la relativité générale et celle de la mécanique quantique par exemple n'ont pas le même domaine d'application) et avec quelles conditions aux limites/initiales.
+On a déjà parlé dans le premier podcast de ce que l'on entend par modèle, un point qu'il est important de précisé c'est qu'il faut expliquer sur quel domaine ce modèle va s'appliquer (on peut voir en physique par exemple que les théories de la relativité générale et celle de la mécanique quantique par exemple n'ont pas le même domaine d'application) et avec quelles conditions aux limites (sur les bords du domaine)/initiales (au début de la simulation si elle évolue dans le temps par exemple).
 
-Assez souvent on va donc donner les équations qui s'appliqueront sur le domaine et on parlera des conditions aux limites pour dire ce qu'il se passe sur les "bords" :
+Assez souvent on va donc donner les équations qui s'appliqueront sur le domaine et on parlera des conditions aux limites pour dire ce qu'il se passe sur les "bords" : une poutre est fixée à un mur et si l'on étudie sa déformation, la condition au niveau du mur est qu'à cet endroit elle ne se déforme pas; si l'on souhaite étudier la température de l'eau que l'on chaufferait dans un tube en cuivre (comme dans une chaudière), à l'entrée du tube l'eau à une température et une certaine vitesse et on chauffe un côté du tube avec une certaine température. Ici la vitesse et les deux température sont des conditions aux limites.
 
- * une poutre est fixée à un mur
- * un flux de liquide est présent sur l'entrée d'un tuyau, etc
+Ces conditions aux limites vont être ainsi de deux types [^condlimiteswp] :
 
-Ces conditions aux limites vont être ainsi de plusieurs types [^condlimiteswp] :
-
- * *Les conditions aux limites en temps* : assez souvent on va imposer des conditions à $t=0$ qui vont par exemple être les conditions initiales d'une simulation en météorologie. On peut aussi imposer des conditions à $t=+\inf$, mais je n'ai pas trouvé d'exemple assez parlant de l'usage de telles conditions aux limites.
- * *Les conditions aux limites en espace* : il y en a de différents types, voici les plus classiques :
-    * Condition aux limites de Dirichlet[^conddirichletwp]  (nommée d'après Johan Dirichlet, 1805-1859, mathématicien allemand ayant notamment travaillé sur les séries de Fourier, l'arithmétique et on lui doit l'essentiel de la démonstration du dernier théorème de Fermat pour le cas où l'exposant est égal à 5[^dirichletwp]) : on spécifie la valeur que va prendre la solution des équations en certaines frontières ou limites du domaine étudié (pour un intervalle $[a,b]$ on aura donc $y(a)=\alpha$ et $y(b)=\beta$). Un exemple est la valeur de la température en $a$ pour l'équation de la chaleur.
-    * Conditions aux limites de Neumann[^condneumannwp]  (nommée d'après Carl Neumann[^carlneumannwp] et pas John Van Neumann, 1832-1925 et il travailla notamment sur les équations intégrales dont l'une des indéterminées est une intégrales et dont les équations de Maxwell sont l'un des plus célèbres représentants [^eqintegwp]) : on spécifie la valeur que va prendre la dérivée de la solution des équations en certaines frontières du domaine (pour un intervalle $[a,b]$ on aura donc $y'(a)=\alpha$ et $y'(b)=\beta$). L'exemple est le flux de température, toujours pour l'équation de la chaleur.
-    * Condition aux limites de Robin[^condrobinwp]  (nommée d'après Victor Gustave Robin, 1855-1897, et non pas notre Robin national, qui a notamment travaillé sur des problèmes de thermodynamique) : ici il s'agit d'imposer aux limites du domaines un relation linéaire entre les valeurs de la fonction et celle de sa dérivée (pour un intervalle $[a,b]$, on aura donc $\alpha.y(a) - \beta.y'(a)=g(a)$ et $\alpha.y(b) - \beta.y'(b)=g(b)$ avec cette fois, $\alpha$, $\beta$ et $g$ des fonctions). L'exemple de ce type de condition est un peu plus complexe mais si on reprend notre exemple d'équation de la chaleur, si un bord est en contact avec un autre milieu, les lois de newton et de Fourier précise que le flux de température à cette interface est proportionnel à la différence de température, mais aussi à la valeur du gradient [^excondrobin].
-
-A côté de ces conditions aux limites en espace, on en a encore qui sont plus siouxes avec par exemple des conditions aux limites dynamiques qui ressemblent aux conditions de robin, mais qui évoluent au cours du temps et fonction des points de la frontière[^condlimdynwp].
-
+ * *Les conditions aux limites en temps* : on prend par exemple pour la prévision du temps les conditions de temppérature de pression à un instant $t$ et on fait évoluer à partir de ces conditions.
+ * *Les conditions aux limites en espace* : les deux plus classiques sont les suivantes :
+    * Condition aux limites de Dirichlet[^conddirichletwp] : Un exemple est la valeur de la température aux extrémités d'une barre dans laquelle on voudrait connaître la répartition de chaleur.
+    * Conditions aux limites de Neumann[^condneumannwp] : Un exemple, toujours avec une barre dont on souhaiterait connaître la répartition de chaleur est le cas où l'on chauffe l'un des côté (on a un flux de chaleur à cette extrémité).
+    
 ### Différences finies
 
 La méthode des différences finies apparaît comme la méthode la plus simple, il s'agit en effet de discrétiser les opérateurs de dérivation/différentiation grâce aux développements de Taylor-Young [^formtaylorwp]  [^brooktaylorwp]. Le mathématicien Brook Taylor établi en 1715 que l'on peut approximer des fonctions suffisamment dérivables au voisinage d'un point par un polynôme dont les coefficients ne dépendent que des dérivées de la fonction en ce point. William Henry Young est arrivé plus tard (1863-1942) lors qu'il travailla sur la théorie de la mesure, les intégrales de Lebesgue etc.
