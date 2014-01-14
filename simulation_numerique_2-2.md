@@ -24,6 +24,10 @@ On parle en fait de linéarité : quand on en met deux fois plus en entrée, on 
 
 Et un gros problème des modèles d'aujourd'hui c'est qu'ils sont très hautement non-linéaire. C'est pourquoi avant toute chose, on va essayer de linéariser ces équations complexes en enlevant les termes qui ne sont pas représentatifs (on néglige souvent les frottements de l'air quand on modélise un pendule par exemple), en prenant des approximations pour des cas plus simples (pour modéliser un pont on va considérer des petites déformations), d'oû provienent souvent les non-linéarités.
 
+Ces non-linéarités qui apparaissent dans les équations sont la source d'un grand nombre de sujets abordés par la théorie du Chaos. Les frottementq de l'air quand ils ne sont pas négligés pour un pendule vont par exemple augmenter en fonction de sa vitesse; quand on chauffe de l'eau, à partir d'une certaine température de la convection apparaît au sein du liquide (le chaud monte et le froid descend) et si la température augmente encore, des vibrations apparaîssent au sommet des rouleaux de convection. 
+
+Ces différents phénomènes (on pourrait aussi citer par exemple le fait que lorsqu'on remue du sable avec un baton par exemple, la résistance au déplacement augmente avec la vitesse) sont dûs aux non-linéarités des équations et sont le domaine d'application de la théorie du Chaos (Le Chaos doit vraiment être un sujet pour un prochain podcast, il est partout!)
+
 Le travail que l'on fait finalement quand on part de zéro est donc le suivant :
 
  1. On définit les équations du modèle qui représente le phénomène que l'on souhaite étudier avec ses conditions aux limites (que se passe-t-il sur les bords du pont)
@@ -46,42 +50,30 @@ Ces conditions aux limites vont être ainsi de deux types [^condlimiteswp] :
     
 ### Différences finies
 
-La méthode des différences finies apparaît comme la méthode la plus simple, il s'agit en effet de discrétiser les opérateurs de dérivation/différentiation grâce aux développements de Taylor-Young [^formtaylorwp]  [^brooktaylorwp]. Le mathématicien Brook Taylor établi en 1715 que l'on peut approximer des fonctions suffisamment dérivables au voisinage d'un point par un polynôme dont les coefficients ne dépendent que des dérivées de la fonction en ce point. William Henry Young est arrivé plus tard (1863-1942) lors qu'il travailla sur la théorie de la mesure, les intégrales de Lebesgue etc.
+Les équations dont je parlais plus tôt, sont des équations dites différentielles : elles sont en fait une relation entre, par exemple, un déplacement, la vitesse et l'accélération ou encore entre la température et son gradient (sa variation sur une distance).
 
-Comme il est question de discrétiser, on peut par exemple regarder ce que cela donne sur un exemple simple :
+Ces différents concepts seront ce que l'on appelle des dérivées : la dérivée dans le temps du mouvement, c'est sa vitesse et la dérivée dans le temps de la vitesse, c'est l'accélération. Pareil pour la dérivée en espace d'une température, c'est son gradient.
 
- * Prenons un segment de longueur 1
- * On le découpe en $n+1$ sous-segments dont le pas sera de $h=1/n$
+Si on veut trouver le déplacement ou la température qui est solution de cette équation différentielle, on va déjà devoir trouver un moyen d'enlever les vitesses, les gradients et tous les trucs du genre. 
 
-On a grosso modo trois types de différences[^difffinwp]  [^difffinwp2] : 
+Et bien le rôle de la méthode des différences finies est justement celui-ci : exprimer ces vitesses, gradients, etc en fonction du déplacement ou de la température. 
 
- * "en avant" : on prend les valeurs en $x$ et $x+h$
- * "en arrière" : on prend les valeurs en $x-h$ et $x$,
- * "centrées" : on prend les valeurs en $x-h/2$ et $x+h/2$
+Ce mot différences finies est un peu barbare, mais en fait, quand on y réfléchit bien, on fait des choses à peu près similaire tout les jours. 
 
-On aura alors comme approximation pour la dérivée de la fonction en $x$ :
+Quand on calcul une vitesse, on se demande quelle distance on a parcours entre deux moments et on fait la division. Il s'agit d'une vitesse moyenne. Et bien c'est un peu la même idée, une vitesse à un point sera la variation entre ses positions à deux instants. Et pour se rapprocher de la vitesse dite "instantanée", on diminue l'intervalle de temps le plus possible. Cette vitesse instantanée c'est justement la "dérivée" du déplacement.
 
-$$ f'(x) = \frac{f(x+h)-f(x)}{h} $$
+Pour l'accélération on fait la même chose que pour obtenir la vitesse (c'est un peu une vitesse de vitesse), et pour le gradient de température, il s'agit d'observer la différence de température entre deux points de l'espace.
 
-Ce qui ressemble à l'expression de la dérivée en terme de limite.
+Et bien les différences finies vont être aux dérivées, ce que les vitesses moyennes vont être aux vitesses instantanées.
 
-En appliquant le même principe à la dérivée première pour obtenir la dérivée second on pour obtenir quelque chose de similaire :
+Comme on l'a dit, pour que l'ordinateur puisse nous aider, il faut "discrétiser" les domaines d'études; c'est-à- dire découper en plein de petits morceaux. Pour calculer les différences finies on prendra ainsi les valeurs aux points de ce maillage (le résultat de la discrétisation du domaine continu).
 
-$$ f''(x) = \frac{f(x+h) - 2f(x) + f(x+h)}{h^2} $$
 
-Tout ceci fonctionne bien en dimension 1, mais pour peut que les fonctions soient suffisamment dérivables, cela s'étend très bien aux dimensions supérieures.
+Ainsi pour tous chaque point du domaine, on aura remplacé dans l'équation dont on souhaite connaître la solution la valeur des dérivées, etc par les différences finies correspondantes. 
 
-On voit donc que l'on a besoin des valeurs en différents points qui vont former le maillage et que l'on obtient une relation assez simple pour l'expression des dérivées première, seconde, etc.
+Si on prend toutes ces relations, on se retrouve avec un gros système d'équations que l'on va résoudre comme on le fait au collège et au lycée. C'est ce système d'équations, que l'on appelle aussi système linéaire que l'on cherche ensuite à résoudre avec des algorithmes.
 
-Finalement on se rend compte que si notre équation implique par exemple une combinaison linéaire de la dérivée seconde et de la fonction en tout point du domaine:
-
-$$ \alpha.f'' + \beta.f = \gamma $$
-
-on se retrouve, grâce aux opérateurs discrétisés à n'avoir affaire qu'à un produit de valeurs de la fonction à trouver qui seront prises en des points définis du maillage.
-
-Ainsi pour tous les points du domaine, on a une une relation entre différentes valeurs de la fonction aux points du maillage. Si on représente par un vecteur $f$ dont les différentes valeurs sont celles de la solution aux points du maillage, on peut représenter cela par le produit entre une matrice (qui va exprimer cette relation) et le vecteur qui correspond à la solution. C'est ce système linéaire que l'on cherche ensuite à résoudre avec des algorithmes.
-
-Pour information [^pauillac] : à partir du 18ème siècle des mathématiciens se sont mis à utiliser des développements de Taylor, et donc les différences finies pour mettre en place des abaques notamment pour les logarithmes et la trigonométrie qui étaient utilisés pour le cadastre, la navigation, l'artillerie, les statistiques, le calcul d'intérêts ou encore l'astronomie. Comme ceux-ci nécessitaient de grands nombres d'opérations de calcul, des mathématiciens et inventeurs se sont mis à tenter la mise en place de machines permettant le calcul "automatique" de ces différences finies. Le premier à presque y arriver fut Charles Baggage entre 1820 et 1843 (il n'y arriva pas complètement) et le Suédois George SCHEUTZ (1785-1873) y arriva en 1840. A savoir que ce type de machine a été utilisé jusque dans les année 1930.
+Pour information [^pauillac] : à partir du 18ème siècle, des mathématiciens se sont mis à utiliser des différences finies pour mettre en place des abaques notamment pour les logarithmes et la trigonométrie qui étaient utilisés pour le cadastre, la navigation, l'artillerie, les statistiques, le calcul d'intérêts ou encore l'astronomie. Comme ceux-ci nécessitaient de grands nombres d'opérations de calcul, des mathématiciens et inventeurs se sont mis à tenter la mise en place de machines permettant le calcul "automatique" de ces différences finies. Le premier à presque y arriver fut Charles Baggage entre 1820 et 1843 (il n'y arriva pas complètement) et le Suédois George SCHEUTZ (1785-1873) y arriva en 1840. A savoir que ce type de machine a été utilisé jusque dans les année 1930.
 
 #### Remarques et limitations
 
