@@ -8,25 +8,23 @@ Dans cet épisode nous allons voir les étapes pour "informatiser ces modèles" 
 
 ## Retour sur pourquoi on simule sur ordinateur
 
-Il faut bien comprendre un point important : on fait de la simulation par ordinateur parce que les problèmes que l'on souhaite résoudre sont trop complexes pour être résolus "à la main" par le calcul. Les équations qui sont enseignées au lycée ou dans les classes supérieures ne sont en fait que celles pour lesquelles on peut dire quelque chose, parce qu'elles sont simples. Mais dans la vraie vie, les modèles que l'on doit utiliser pour être réaliste sont loin des cas d'école. Bien au contraire, ces équations simples ne sont que des cas très particuliers qui aident seulement à comprendre les mécanismes en jeu.
+Il faut bien comprendre un point important : on fait de la simulation sur ordinateur parce que les problèmes que l'on souhaite résoudre sont trop complexes pour être résolus "à la main" par le calcul. Les équations qui sont enseignées au lycée ou dans les classes supérieures ne sont en fait que celles pour lesquelles on peut dire quelque chose, parce qu'elles sont simples. Mais dans la vraie vie, les modèles que l'on doit utiliser, pour être réaliste, sont loin des cas d'école. Bien au contraire, ces équations simples ne sont que des cas très particuliers qui aident seulement à comprendre les mécanismes en jeu. C'est un peu ce qu'expliquait Robin dans un de ses dossiers sur les plupart des courbes à propos desquelles on ne sait quasiment rien dire la plupart du temps. Et bien là c'est un peu pareil.
 
 Les équations des modèles que l'on utilise sont tellement complexes qu'on ne connaît jamais de solution exacte que la résolution à la main (comme on le fait pour des équations du second degré comme on nous l'a appris au lycée par exemple) nous donnerait. 
 
-Si on veut modéliser un transfert de chaleur par exemple, l'exemple de base est celui de la conduction dans un barre d'un matériau quelconque. Mais dans la vraie vie, on va avoir aussi d'autres phénomènes : la convection, la radiation, une géométrie qui ressemblera peut-être plus à un radiateur (avec un forme complexe) qu'à une barre en forme de tube plein. 
-
-Comme je l'avais expliqué dans le premier épisode sur la simulation numérique, la discrétisation est obligatoire pour qu'un ordinateur puisse être utilisé : cela permet de découper en plein de petits morceaux indépendants et en nombre fini les problèmes qui peuvent être ainsi traité par une machine qui ne peut pas travailler sur le continu (une ligne va posséder une infinité de points et sa version discrétisée un nombre fini).
+Comme je l'avais expliqué dans le premier épisode sur la simulation numérique, la discrétisation est obligatoire pour qu'un ordinateur puisse être utilisé : cela permet de découper en plein de petits morceaux indépendants et en nombre fini les problèmes qui peuvent être ainsi traités par une machine qui ne peut pas travailler sur le continu (une ligne va posséder une infinité de points et sa version discrétisée un nombre fini).
 
 Il existe tout un tas de méthodes de discrétisation, nous aborderons l'un des plus répandues qui se nomme la méthode des différences finies. 
 
-Mais avant toute chose, il faut bien comprendre que ces méthodes ne permettent pas de tout traiter. C'est comme pour les modèles, elles sont valables et valides dans certains cadres : quand les équations sont trop chaotiques, que des phénomènes de seuil critique (en dessous, rien ne se passe, et au-dessus on voit apparaître quelque chose), de saturation (au-dessus d'un seuil le comportement observé ne change pas) ou d'hystérésis (une valeur d'entrée, qu'elle soit attente en accélération ou en décélération va donner deux sorties différentes, même si c'est deux fois la même valeur) apparaissent, on arrive à leurs limites.
+Mais avant toute chose, il faut bien comprendre que ces méthodes ne permettent pas de tout traiter. C'est comme pour les modèles : elles sont valables et valides dans certains cadres. Quand les équations sont trop chaotiques, que des phénomènes de seuil critique (en dessous, rien ne se passe, et au-dessus on voit apparaître quelque chose), de saturation (au-dessus d'un seuil le comportement observé ne change pas) ou d'hystérésis (une valeur d'entrée, qu'elle soit attente en accélération ou en décélération va donner deux sorties différentes, même si c'est deux fois la même valeur) apparaissent, on arrive à leurs limites.
 
 On parle en fait de linéarité : quand on en met deux fois plus en entrée, on en a deux fois plus à la sortie. Chose que n'est plus respecté avec ces histoires de seuil critique ou de saturation.
 
-Et un gros problème des modèles d'aujourd'hui c'est qu'ils sont très hautement non-linéaire. C'est pourquoi avant toute chose, on va essayer de linéariser ces équations complexes en enlevant les termes qui ne sont pas représentatifs (on néglige souvent les frottements de l'air quand on modélise un pendule par exemple), en prenant des approximations pour des cas plus simples (pour modéliser un pont on va considérer des petites déformations), d'oû provienent souvent les non-linéarités.
+Et un gros problème des modèles d'aujourd'hui c'est qu'ils sont très hautement non-linéaires. C'est pourquoi avant toute chose, on va essayer de linéariser ces équations complexes en enlevant les termes qui ne sont pas représentatifs (on néglige souvent les frottements de l'air quand on modélise un pendule par exemple) ou en prenant des approximations pour des cas plus simples (pour modéliser un pont on va considérer des petites déformations), d'oû proviennent souvent les non-linéarités.
 
-Ces non-linéarités qui apparaissent dans les équations sont la source d'un grand nombre de sujets abordés par la théorie du Chaos. Les frottementq de l'air quand ils ne sont pas négligés pour un pendule vont par exemple augmenter en fonction de sa vitesse; quand on chauffe de l'eau, à partir d'une certaine température de la convection apparaît au sein du liquide (le chaud monte et le froid descend) et si la température augmente encore, des vibrations apparaîssent au sommet des rouleaux de convection. 
+Ces non-linéarités qui apparaissent dans les équations sont la source d'un grand nombre de sujets abordés par la théorie du Chaos. Les frottements de l'air quand ils ne sont pas négligés pour un pendule vont par exemple augmenter en fonction de sa vitesse; quand on chauffe de l'eau, à partir d'une certaine température de la convection apparaît au sein du liquide (le chaud monte et le froid descend) et si la température augmente encore, des vibrations apparaîssent au sommet des rouleaux de convection. 
 
-Ces différents phénomènes (on pourrait aussi citer par exemple le fait que lorsqu'on remue du sable avec un baton par exemple, la résistance au déplacement augmente avec la vitesse) sont dûs aux non-linéarités des équations et sont le domaine d'application de la théorie du Chaos (Le Chaos doit vraiment être un sujet pour un prochain podcast, il est partout!)
+Ces différents phénomènes (on pourrait aussi citer par exemple le fait que lorsqu'on remue du sable avec un baton par exemple, la résistance au déplacement augmente avec la vitesse) sont modélisés par les non-linéarités des équations et sont le domaine d'application de la théorie du Chaos (Le Chaos doit vraiment être un sujet pour un prochain podcast, il est partout!). Un bon livre sur la question, a été d'ailleurs écrit par James Gleick [^gleick].
 
 Le travail que l'on fait finalement quand on part de zéro est donc le suivant :
 
@@ -43,10 +41,10 @@ Assez souvent on va donc donner les équations qui s'appliqueront sur le domaine
 
 Ces conditions aux limites vont être ainsi de deux types [^condlimiteswp] :
 
- * *Les conditions aux limites en temps* : on prend par exemple pour la prévision du temps les conditions de temppérature de pression à un instant $t$ et on fait évoluer à partir de ces conditions.
+ * *Les conditions aux limites en temps* : on prend par exemple pour la prévision du temps les conditions de température ou de pression à un instant $t$ et on fait évoluer à partir de ces conditions.
  * *Les conditions aux limites en espace* : les deux plus classiques sont les suivantes :
     * Condition aux limites de Dirichlet[^conddirichletwp] : Un exemple est la valeur de la température aux extrémités d'une barre dans laquelle on voudrait connaître la répartition de chaleur.
-    * Conditions aux limites de Neumann[^condneumannwp] : Un exemple, toujours avec une barre dont on souhaiterait connaître la répartition de chaleur est le cas où l'on chauffe l'un des côté (on a un flux de chaleur à cette extrémité).
+    * Conditions aux limites de Neumann[^condneumannwp] : Un exemple, toujours avec une barre dont on souhaiterait connaître la répartition de chaleur est le cas où l'on chauffe l'un des côtés (on a un flux de chaleur à cette extrémité).
     
 ### Différences finies
 
@@ -68,8 +66,7 @@ Et bien les différences finies vont être aux dérivées, ce que les vitesses m
 
 Comme on l'a dit, pour que l'ordinateur puisse nous aider, il faut "discrétiser" les domaines d'études; c'est-à- dire découper en plein de petits morceaux. Pour calculer les différences finies on prendra ainsi les valeurs aux points de ce maillage (le résultat de la discrétisation du domaine continu).
 
-
-Ainsi pour tous chaque point du domaine, on aura remplacé dans l'équation dont on souhaite connaître la solution la valeur des dérivées, etc par les différences finies correspondantes. 
+Ainsi pour chaque point du domaine, on aura remplacé dans l'équation dont on souhaite connaître la solution la valeur des dérivées, etc par les différences finies correspondantes. 
 
 Si on prend toutes ces relations, on se retrouve avec un gros système d'équations que l'on va résoudre comme on le fait au collège et au lycée. C'est ce système d'équations, que l'on appelle aussi système linéaire que l'on cherche ensuite à résoudre avec des algorithmes.
 
@@ -77,89 +74,45 @@ Pour information [^pauillac] : à partir du 18ème siècle, des mathématiciens 
 
 #### Remarques et limitations
 
-L'un des problèmes des différences finies vient du maillage qui est forcément à base de carrés ou de rectangle et que ceci ne permet pas assez efficacement d'approcher des formes qui peuvent être complexes (pour un cercle par exemple, on va retrouver assez peu de points qui seront sur la frontière et qui permettront donc d'exprimer les conditions aux limites).
+L'un des problèmes des différences finies vient du maillage qui est forcément à base de carrés, de rectangles ou tout du moins de parallélogrammes et que ceci ne permet pas assez efficacement d'approcher des formes qui peuvent être complexes (pour un cercle par exemple, on va retrouver assez peu de points qui seront sur la frontière et qui permettront donc d'exprimer les conditions aux limites).
 
-On le verra aussi avec les éléments finis, mais le contexte mathématique associé permet la mise en place de preuves plus rigoureuses pour les éléments finis.
+#### Ouverture vers d'autres méthodes
 
-Une des différences majeures entre les différences finies et les deux méthodes suivantes est aussi le fait qu'ici on approxime des dérivées alors qu'avec les éléments finis ou les volumes finis, on approxime les intégrales.
+A partir des années 50-60, d'autres méthodes ont aussi été développées pour donner un cadre mathématique plus rigoureux qui permette d'assurer l'obtention d'une solution qui ait du sens, s'assurer que les algorithmes vont être stables et ne vont pas donner n'importe quoi, etc. Elles venaient notamment de la mécanique du solide.
 
-### Éléments finis
-
-Pour les éléments finis, on n'utilise pas des développements de Taylor-Young comme pour les différences finies qui sont en fait des approximations des dérivées, mais plutôt des approximations des intégrales des équations aux dérivées partielles étudiées.
-
-Dans ce type de discrétisation, il est plutôt question d'approximer la solution sur le maillage par des fonctions qui seront définies sur les éléments du domaine, et uniquement sur ceux-ci. Un peu comme une base de fonctions comme les bases dans $\mathbb{R}^n$.
-
-Comme décrit dans^[docinsa], à l'origine, la méthode des éléments finis était une généralisation de la méthode des déplacements pour les structures à barres, à la mécanique des milieux continus. Depuis cette technique a largement débordé ce premier cadre pour aboutir à une méthode numérique permettant de résoudre les problèmes d'équations différentielles "aux limites". C'est notamment pour cela que l'on retrouve souvent des histoires de "travail" pour exprimer certaines quantités dans les différentes formulations.
-
-Comme je le disais, ici l'idée est de décomposer le problème sur des bases de fonctions qui sont définies sur les arêtes des "éléments" utilisés pour le maillage, et ensuite d'utiliser la décomposition de la fonction solution sur ce maillage, et par l'usage d'analyse numérique un peu trop poussée pour être explicité ici, on arrive à trouver un système linéaire qui permet d'aboutir à un système linéaire de type $A.x = b$. 
-
-Au cours de la discrétisation, on fait ce que l'on appelle une réduction d'ordre de dérivation qui permet d'intégrer les conditions aux limites au sein du système linéaire.
-
-Pour information, cette méthode des éléments finis est extrêment répandu dans les logiciels de simulations pour des domaines variés allant de mécanique des milieux continus, la mécanique des fluides, la météorologie, en génie civil, en électromagnétique, etc.
-
-Pour ceux que cela intéresse, vous pourrez trouver une liste assez longue de cours sur le sujet dans les références[^emformwp]  [^emrappelswp]  [^empreswp]  [^efmwp]  [^dynastruct].
-
-#### Remarques et limitations
-
-Par opposition aux différences finies, ici le maillage peut-être beaucoup plus adapté aux géométries considérées, on peut grâce à des éléments triangulaires notamment obtenir des solutions plus fidèles et obtenir le nombre de points suffisants pour les conditions aux limites.
-
-Il est aussi important de noter que le contexte mathématique est bien plus poussé pour les éléments finis que pour les différences finies.
-
-Il faut cependant noter qu'il est nécessaire d'imposer une certaine régularité aux fonctions considérées : les solutions doivent notamment être suffisamment continues et différentiables. Et ceci peut poser des difficultés pour des problèmes d'électromagnétisme notamment ou les solutions peuvent observer de fortes discontinuités sur les domaines étudiées.
-
-Enfin, les maillages complexes voire non-structurés (utilisation de mailles triangulaires, quadrilatères, voire autres) peuvent aussi complexifier les résolutions et il est parfois nécessaire de changer les maillages en faisant de l'interpolation pour revenir à des maillages dits structurés.
-
-### Volumes finis
-
-De la même manière que pour les éléments finis, la méthode des volumes finis travaille sur les intégrales des EDP étudiées. A la différence des éléments finis où l'on travaille plutôt sur ce que l'on appelle la formulation variationnelle ou formulation faible (on a réduit le niveau de dérivation entre autres) on travaille ici directement sur la formulation forte [^volfiniswp].
-
-En fait, cette méthodes des volumes finis a d'abord été appliquée aux lois de conservation (conservation de la masse, de la quantité de mouvement, etc) qui mettent en jeu un opérateur différentiel nommé *divergence*[^divergencewp].
-
-Grâce à un théorème dit de flux-divergence[^fluxdivwp], on transforme des équations sur des volumes (autour des points du maillage) en des équations sur des surfaces et comme les équations sont conservatives, le flux qui entre est égal au flux qui sort donc cela s'y prête bien.
-
-A la différence des éléments finis, la méthode des volumes finis est adaptée à des maillages dit non-structurés (comme on ne se soucie pas du maillage, on peut mélanger des triangles avec des carrés, etc. Ceci est plus compliqué avec la méthode des éléments finis).
-
-De plus il est ici question de considérer des valeurs moyennes de la fonction recherchée sur les volumes considérés. Les conditions imposées de continuité et de dérivabilité nécessaires avec les éléments finis sont donc relaxées et permettent de résoudre des problèmes sur lesquels ces derniers pèchent parfois.
+Elles ont cherché à résoudre certains des problèmes cités avant, notamment sur la rigueur du cadre mathématique. De plus, là où les différences finies ne vont s'intéresser qu'aux points du maillages, là où d'autres méthodes plus récentes vont plutôt chercher à donner les solutions le long des lignes reliant les points du maillage, voire même au sein de volumes autour de ces points.
 
 ## Résolution de systèmes linéaires
 
-Une fois que ces méthodes de discrétisation nous ont permis d'obtenir des systèmes linéaires à résoudre, il est nécessaire de mettre en place des algorithmes de résolution du système obtenu.
+Une fois que ces méthodes de discrétisation nous ont permis d'obtenir des systèmes d'équations, ou systèmes linéaires à résoudre, il est nécessaire de mettre en place des algorithmes de résolution du système obtenu.
 
-Grosso modo, l'idée est d'inverser la matrice $A$ pour que l'on puisse se retrouver avec $x = A^{-1}.b$. Sauf que cela n'est pas forcément évident quand on parle de matrices. Je ne reviendrais pas sur la question car elle a notamment été abordé dans de précédents podcasts je crois quand il était question de commutativité de la multiplication quand il est question de matrice.
+Il existe ainsi différentes méthodes que l'on pourra classer dans deux grandes catégories : Les méthodes directes [^directmeth] et les méthodes itératives [^itermethwp]
 
-Il existe ainsi différentes méthodes que l'on pourra classer dans deux grandes catégories :
-
-* Les méthodes directes [^directmeth]
-* Les méthodes itératives [^itermethwp]
-
-Je vais ici me concentrer sur les méthodes qui servent à la résolution de systèmes en régime stationnaire (ne dépendant pas du temps). Quand le temps intervient on va utiliser d'autres méthodes comme les méthodes de d'Euler[^eulerwp], de Crank-Nicolson [^cranicwp], de Runge-Kutta [^rkwp], etc.
-
-A noter un point intéressant : pour certains problèmes stationnaires, on peut-être amené à les transformer en problèmes quasi-stationnaires (avec un petit terme en temps qui va apparaître dans la matrice) afin qu'ils soient plus simple à résoudre (le fait que l'on augmente artificiellement les termes sur la diagonale de la matrice améliore la capacité des algorithmes utilisés ensuite à converger vers la bonne solution). On va alors utiliser, pour chaque pas de temps une méthode directe ou itérative pour résoudre une équation à un temps donné, et ensuite une méthode comme celles citées un peu plus haut pour résoudre le problème quasi-stationnaire dont la solution sera celle du problème stationnaire.
 
 ### Les méthodes directes
 
 Les méthodes directives permettent théoriquement d'aboutir à la solution exacte du système linéaire.
-La plus classique est celle dite du pivot de Gauss ou d'élimination de Gauss-Jordan. Le but est en fait de se débrouille en différentes étapes à inverser la matrice (en gros). Le problème de ces méthodes, c'est qu'elles peuvent être longues et qu'elles peuvent amener des problèmes numériques pendant l'inversion (notamment quand on va devoir diviser par des nombres petits, des choses comme ça), même si à priori elles permettent d'obtenir la solution exacte.
+La plus classique est celle dite du pivot de Gauss ou d'élimination de Gauss-Jordan. Le but est en fait de se débrouille en différentes étapes à résoudre le systèmes d'équation comme on le fait à l'école quand on avait un système de deux équations : on a deux équations avec deux inconnues, on exprime la première inconnue en fonction de l'autre avec la première équations, et on remplace cette inconnue dans la seconde équation pour trouver la deuxième inconnue. Ensuite on met la valeur trouvée pour la seconde inconnue dans la relation avec la première inconnue et on a trouver nos deux valeurs.
+
+Ben le principe est le même, mais avec les inconnues qui vont être les valeurs de la solution aux points du maillage et le système d'équation que l'on a obtenu plus tôt.
+
+Le problème de ces méthodes, c'est qu'elles peuvent être longues (on doit faire autant d'étapes que d'inconnues dans le système) et qu'elles peuvent amener des problèmes numériques pendant l'inversion (notamment quand on va devoir diviser par des nombres petits, des choses comme ça), même si à priori elles permettent d'obtenir la solution exacte.
 
 ### Les méthodes itératives. 
 
-Celles-ci propose de partir d'une solution $x_0$ et d'ensuite minimiser une fonction où entre en jeu la matrice et le second membre. Pour que tout se passe bien, il est nécessaire que $x_0$ soit proche de la solution finale.
+Celles-ci propose de partir d'une solution initiale et d'ensuite chercher à se rapprocher de la vraie solution en regardant si on se rapproche ou on s'éloigne.
 
-Un exemple de ces méthode (méthodes dites de Krylov[^krylovwp]) qui trouve différentes implémentations utilisées dans les codes de calcul aujourd'hui est le suivant : L'idée est de définir des vecteurs au fur et à mesure des itérations avec comme contrainte qu'ils soient dit conjugués ou orthogonaux avec un certain produit scalaire (où entre en jeu la matrice du système linéaire). Cette condition implique d'ailleurs un certain nombre de propriétés sur la matrice du système. L'idée est en fait de créer une base de $\mathbb{R}^n$ avec des vecteurs orthogonaux entre eux et dont la solution en construction est une combinaison linéaire. On voit donc en fait qu'une fois constitué autant de vecteurs orthogonaux que la taille de l'espace, on se retrouve avec une solution théoriquement exacte (en ce sens on pourrait parler de méthode directe).
+La plupart de ces méthodes, dites de Krylov[^krylovwp], ont pour but de calculer à chaque étape un gradient qui va donner la direction dans laquelle aller pour se rapprocher de la solution. En fait, à chaque étape il va littéralement nous dire si on chauffe ou si on refroidit (comme pour le gradient de température)!
 
-Les algorithmes les plus connus implémentant cette méthode vont être ceux nommés GMRES, Gradient Conjugué [^gcwp], etc. 
+Comme on se rapproche au fur et à mesure des étapes de la solution, on peut se fixer une précision à partir de laquelle on va s'arrêter. Ainsi on n'ira pas jusqu'à un nombre d'itérations qui correspond à la taille du problème. C'est pour cela qu'elles sont souvent utilisées à la place des méthodes dites directes car elles sont vues comme plus rapides.
 
-En fait on n'ira pas jusqu'à un nombre d'itérations qui correspond à la taille du problème, on va plutôt considérer une erreur que l'on cherchera à faire aller sous un certain niveau au-dessous duquel la solution sera considérée comme satisfaisante.
-
-![Représentation de la convergence de la méthode du gradient conjugué](images/500px-Conjugate_gradient_illustration.svg.png "Représentation de la convergence de la méthode du gradient conjugué")
-
-A noter que la méthode ADI[^adiwp] a été l'une des premières qui fut mise en place car elle se basait sur les différences finies (relativement moins complexes que les autres méthodes de discrétisation) et prenait peu de place en mémoire (la matrice avait beaucoup de zéros et seules des bandes le long de la diagonale étaient non-nulles). Ces méthodes peuvent diverger, et il est donc important d'avoir une solution initiale pas trop "mauvaise", mais aussi que la matrice aient de bonnes propriétés que je n'aborderais pas ici (conditionnement notamment).
+## Parallélisation et décomposition de domaine
 
 Quand les systèmes linéaires à résoudre deviennent trop gros et que l'on a à disposition des serveurs informatiques avec de multiples processeurs, voire même plusieurs serveurs informatiques, on peut tenter de paralléliser ces algorithmes.
 
-Pléthore de littérature existe sur la question, et on peut faire ce que l'on appelle de la décomposition de domaine par exemple[^ddmwp]. Si on dispose de quatre processeurs et que l'on veut simuler la modification de structure d'un avion en vol, on va par exemple faire calculer la solution sur chaque aile à l'un d'entre eux et on va couper le fuselage en deux pour le distribuer entre les deux processeurs restant.
+Une littérature abondante existe sur la question, et on peut faire ce que l'on appelle de la décomposition de domaine par exemple[^ddmwp]. Si on dispose de quatre processeurs et que l'on veut simuler la modification de structure d'un avion en vol, on va par exemple faire calculer la solution sur chaque aile à l'un d'entre eux et on va couper le fuselage en deux pour le distribuer entre les deux processeurs restant.
 
-Dans ces cas-là il devient important de bien découper ses problèmes pour qu'aux frontières tout se passent bien (je rappelle que l'on calcule les solutions aux points des maillages et que si ils ne coincident pas on peut commencer à avoir des problèmes) avec un peu de recouvrement pour que les informations de la solution à chercher puissent se propager entre les "domaines".
+Dans ces cas-là il devient important de bien découper ces problèmes pour qu'aux frontières tout se passent bien (je rappelle que l'on calcule les solutions aux points des maillages et que si ils ne coincident pas on peut commencer à avoir des problèmes) avec un peu de recouvrement pour que les informations de la solution à chercher puissent se propager entre les "domaines".
 
 Ces méthodes de découpage du domaines en différents sous-éléments qui seront répartis sur des processeurs ou des serveurs vont impliquer des temps de communication pour transférer les informations aux frontières de chacun de ces sous-domaines. Et si l'on découpe trop, il peut arriver que l'algorithme global passe plus de temps à transférer des données qu'à calculer effectivement. Il est donc bon de découper de manière efficace son domaine et d'essayer de "recouvrir" le temps passé à communiquer des informations par du calcul.
 
@@ -169,7 +122,7 @@ Il existent une grande quantité de librairies logicielles qui existent pour ré
 
 A savoir que ces librairies ont été écrites en Fortran pour les plus anciennes [^fortranwp], l'un des tout premiers langages informatiques de haut-niveau créé dans les années 50 et encore toujours roi dans le monde de la simulation informatique.
 
-Je l'ai survolé, mais l'informatique en terme de matériel et de logiciel a évolué de manière conjointe. Comme je l'expliquais, on est passé de discrétisation avec des différences finies et des méthodes de type ADI peu gourmande en mémoire dans les années 50-60, à des méthodes plus complexes comme les éléments finis par la suite. On a vu aussi grandir les maillages qui n'avait que de petites tailles pour des histoires de limitation de taille mémoire et disque à des problèmes qui font maintenant plusieurs dizaines voire centaines de millions d'inconnues et qui prennent ainsi plusieurs giga-octets de RAM.
+Je l'ai survolé, mais l'informatique en terme de matériel et de logiciel a évolué de manière conjointe. Comme je l'expliquais, on est passé de discrétisation avec des différences finies et des méthodes peu gourmande en mémoire dans les années 50-60 (on faisait avec ce que l'on avait), à des méthodes plus complexes, plus précises, mais aussi plus gourmandes en mémoire et en espace disque par la suite. On a vu aussi grandir les maillages qui n'avait que de petites tailles (toujours pour des histoires de limitation de taille mémoire et disque) à des problèmes qui font maintenant plusieurs dizaines voire centaines de millions d'inconnues et qui prennent ainsi plusieurs giga-octets de RAM.
 
 On a aussi du paralléliser les algorithmes pour pouvoir tirer partie des super-calculateurs et de leur puissance répartie. Et maintenant on en vient même à utiliser des cartes graphiques de manière massive pour leur capacité de traitements parallèles très importante.
 
@@ -181,14 +134,17 @@ D'ailleurs un des problèmes qui est apparu est la question des données. J'ai p
 
 ## Les cartes graphiques pour aider dans la simulation
 
-Quelque chose qui s'est développé ces dernières années à notamment été l'usage des cartes graphiques pour aider au calcul. En tant que solution de traitement parallèle massif, les GPUs de ces cartes peuvent avoir de vrais atouts.
+Quelque chose qui s'est développé ces dernières années a notamment été l'usage des cartes graphiques pour aider au calcul. En tant que solution de traitement parallèle massif, les GPUs de ces cartes peuvent avoir de vrais atouts.
 
-Il y a quand même quelques inconvénients :
+Il y a quand même quelques inconvénients : Avant que qu'OpenCL[^openclwp] n'arrive, voire même CUDA [^cudawp] avant lui (deux "langages dédié à l'usage de GPU") il était nécessaire de manier les structures de données propres aux jeux vidéos pour en tirer partie. Ce n'était pas très évident et plus du domaine de la bidouille qu'autre chose. 
 
- * Avant que qu'OpenCL[^openclwp] n'arrive, voire même CUDA [^cudawp] avant lui (deux "langages dédié à l'usage de GPU") il était nécessaire de manier les structures de données propres aux jeux vidéos pour en tirer partie. Ce n'était pas très évident et plus du domaine de la bidouille qu'autre chose. Maintenant cela est plus simple, et un certain nombre de code de calcul se mettent à en tirer partie.
- * Cependant les limitations en terme de mémoire de ces cartes (si on a plus de données que la place disponible dans la carte, on va adresser la mémoire centrale de l'ordinateur et l'on perd tout l'intérêt) et de précision numérique (les cartes ne calcul qu'avec des entiers de base et pas des nombres réels) font que les performances mirobolantes annoncées par Nvidia notamment en font revenir plus d'un vers le calcul plus classique 
+Maintenant cela est plus simple car s'est développé un eco-système logiciel qui va permettre de développer son logiciel avec certaines directives spécifiques : autour d'une boucle d'opérations indépendantes on va dire que cela peut être déployé sur tous les processeurs du GPU par exemple. Celui-ci sera compilé de telle manière que l'application produite, quand elle arrivera à ces directives, saura comment faire pour exploiter la puissance du GPU. Et un certain nombre de code de calcul se mettent à en tirer partie. Cependant les limitations en terme de mémoire de ces cartes (si on a plus de données que la place disponible dans la carte, on va adresser la mémoire centrale de l'ordinateur et l'on perd tout l'intérêt car, du point de vue tant d'accès, on perd du temps à aller chercher des données et à les ramener sur la carte graphique) et de précision numérique (les cartes ne calculent qu'avec des entiers de base et pas des nombres réels vu qu'elles servent plutôt à manier des pixels normalement) font que les performances mirobolantes annoncées par Nvidia notamment, en font revenir plus d'un vers le calcul plus classique .
 
-Une des alternatives qui commence à arriver serait l'usage (comme il y a bien longtemps) de co-processeurs spécialisés à cette tâche comme les Xeon-Phi[^xeonphi] de chez Intel.
+Une des alternatives qui commence à arriver serait l'usage (comme il y a bien longtemps) de co-processeurs spécialisés à cette tâche comme les Xeon-Phi[^xeonphi] de chez Intel. Le but du Xeon Phi, est de fournir un équivalent de GPU (en terme de puissance, de nombre de coeur, etc) mais avec la même architecture logicielle que les processeurs classiques (x86). En fait l'idée est que l'on puisse se passer des surcouches logicielles dont on se sert pour adapter une application pour des GPUs classiques.
+
+Il est intéressant de noter que le principe des co-processeurs est un peu celui des cartes graphiques : avoir un processeur dédié à des tâches précises (ici le calcul des pixels qui seront affichés sur l'écran). C'est quelque chose qui s'est développé dans les années 70 jusqu'à la fin des années 90 pour différents cas d'usage : les mainframe, ces ordinateurs énormes qui servaient par exemple pour maintenir les systèmes comptables, utilisaient des co-processeurs qui géraient les écritures et lectures de données. 
+
+Ces co-processeurs on été réintégrés dans le processeur principal à partir de 2000 et finalement on voit qu'ils réapparaîssent de nouveau. Comme quoi, tout comme la mode, dans l'informatique, les choses vont et viennent de manière cyclique.
 
 Les librairies comme Magma que j'ai brièvement cité plus haut viennent remplacer les librairies vieillissantes comme Lapack en prenant en compte ces accélérateurs (co-processeurs, cartes graphiques, etc) pour la résolution des systèmes linéaires considérés. Elles permettent ainsi de facilement prendre en compte les nouveaux matériels disponibles cités ci-dessus.
 
@@ -196,39 +152,30 @@ Les librairies comme Magma que j'ai brièvement cité plus haut viennent remplac
 
 Un effet collatéral étonnant a été l'usage de la librairie Linpack pour évaluer la performance crête des super-calculateurs. L'idée était en effet de mesure la performance des systèmes informatiques pour la résolution d'un système linéaire basé sur les fonctions fournies par la librairie.
 
-Pendant longtemps ce logiciel a été à la base du Top500[^top500], le classement des 500 calculateurs les plus puissants du monde. Puis avec l'avènement des cartes graphiques qui en puissance brute sont intéressantes, mais en usage réel assez peu utilisables (sans les outils adéquats en cours de développement comme Magma) et les problématiques de grandes données qui ne sont pas très bien prises en compte par ce test[^linpacklim], différents autres classements sont apparus avec le Green500 [^green500] notamment qui estime plutôt la performance énergétique d'un système informatique.
+Pendant longtemps ce logiciel a été à la base du Top500[^top500], le classement des 500 calculateurs les plus puissants du monde. Puis avec l'avènement des cartes graphiques, qui en puissance brute sont intéressantes, mais en conditions réelles assez peu utilisables, et les problématiques de grandes données qui ne sont pas très bien prises en compte par ce test[^linpacklim], différents autres classements sont apparus. Le Green500 [^green500] est l'un d'entre eux et il vise plutôt à estimer la performance énergétique d'un système informatique que sa puissance brute.
 
-A noter par exemple que Tianhe 2, la machine la plus puissante du monde presque 3 millions de coeurs dont une grande partie correspond à des co-processeurs xeon phi possédant chacun 57 coeurs mais avec une performance énergétique (puissante linpack sur consommation énergétique) en retrait (1900 MFlops/W).
+### Green500 et performance énergétique
+
+A noter par exemple que Tianhe-2, la machine la plus puissante du monde, possède presque 3 millions de coeurs dont une grande partie correspond à des co-processeurs xeon phi possédant chacun 57 coeurs mais avec une performance énergétique (puissance Linpack sur consommation énergétique) en retrait (1900 MFlops/W).
+
 Au contraire la machine détenue par le centre de calcul du ROMEO en Champagne-Ardennes est classée 5ème du green500 et possède une très bonne performance énergétique (3130 MFlops/W).
 
-Il est en effet devenu crucial de gérer correctement les problématiques d'énergie, car la puissance de calcul grandissante de ces moyens informatiques, la consommation énergétique va de pair et ceci sans parler de la consommation électrique des climatisations nécessaires pour refroidir les serveurs. Pour info, aujourd'hui, il faut quasiment autant d'énergie pour la climatisation que pour les serveurs.
+Il est en effet devenu crucial de gérer correctement les problématiques d'énergie. En effet la puissance de calcul grandissante de ces moyens informatiques va de paire avec une consommation énergétique qui grimpe en flèche. Et ceci sans parler de la consommation électrique des climatisations nécessaires pour refroidir les serveurs. Pour info, aujourd'hui, il faut quasiment autant d'énergie pour la climatisation que pour les serveurs.
 
-Avec près de 17 000 coeurs de calcul au CC-IN2P3[^ccin2p3]  (le centre de calcul qui possédait les données du LHC concernant le boson de Higgs) et les 20 Peta-octets de stockage sur disque et sur bande, il est nécessaire de disposer d'une alimentation de plusieurs mégawatts !
-
-## Rappel sur les types de simulation
-
-Je ne l'avais pas forcément expliqué, mais il y a plusieurs types de simulation numériques possibles [^siminfowp] :
-
- * La simulation discrète dans laquelle le système est soumis à une succession d’évènements qui le modifient. Ces simulations ont vocation à appliquer des principes simples à des systèmes de grande taille. La simulation discrète se divise en deux grandes catégories :
-    * asynchrone ou time-slicing : on simule à chaque fois le passage d’une unité de temps sur tout le système. Ce terme n'est généralement plus utilisé dans le domaine professionnel depuis l'apparition croissante des nouvelles technologies.
-    * synchrone ou event-sequencing : on calcule l’arrivée du prochain événement, et on ne simule qu’événement par événement, ce qui permet souvent des simulations rapides, bien qu’un peu plus complexes à programmer.
- * La simulation par agents, où la simulation est segmentée en différentes entités qui interagissent entre elles. Elle est surtout utilisée dans les simulations économiques et sociales, où chaque agent représente un individu ou un groupe d’individus. Par nature, son fonctionnement est asynchrone.
- * La simulation continue, où le système se présente sous la forme d’équations différentielles à résoudre. 
-
-Il existe d'ailleurs différentes méthodes de simulation, avec par exemple les méthodes de monte-carlo comme nous l'avons vu dans le précédent podcast, mais aussi les simulation atomistiques (pour certaines appelées ab initio) dont un exemple serait l'étude de l'eau avec un travail au niveau des atomes, puis des molécules, puis de la masse globale ou encore celles dont je vais parler qui sont les méthodes de discrétisation.
+Avec près de 17 000 coeurs de calcul et 20 Peta-octets de stockage sur disque et sur bande au CC-IN2P3[^ccin2p3]  (le centre de calcul qui possédait les données du LHC concernant le boson de Higgs), il est nécessaire de disposer d'une alimentation de plusieurs mégawatts !
 
 # Conclusions
 
 Voilà, j'ai tenté de dresser un panorama de ce que me semble être la simulation numérique avec :
 
  * Un premier podcast plutôt général sur la simulation, les problématiques auxquelles elle tente de répondre, avec quelques exemples et notamment la première qui fut mise en place dans les années 50.
- * Un second plutôt cette fois orienté sur les méthodes dédiées aux EDP avec des infos plus mathématiques et informatiques sur les méthodes de discrétisations, comment on implémente cela sur des serveurs et finalement quelques digressions plus large sur les impacts des technologies dans le domaine.
+ * Un second plutôt cette fois orienté plutôt sur les aspects mathématiques et informatiques, un exemple de méthode de discrétisation, ce que l'on utilise pour mettre en oeuvre ces outils sur des serveurs et finalement quelques digressions plus large sur les impacts des technologies dans le domaine.
 
 Il est finalement important de voir que la simulation :
 
-* Est indispensable pour la science aujourd'hui pour continuer de comprendre les phénomènes qui nous entoure, et que cela ne va pas aller en diminuant
+* Est indispensable pour la science d'aujourd'hui pour continuer de comprendre les phénomènes qui nous entoure, et que cela ne va pas aller en diminuant
 * Est la source de nouveaux challenges qui ont des impacts dans nos vies de tous les jours (Cloud, Big Data, etc)
-* Est sortie depuis longtemps du domaine scientifique et le monde du jeu vidéo profite depuis quelques années des avancées dans ce domaine, MS Flight Simulator était l'un des premiers, maintenant on parle notamment de moteur physique, de simulation de vagues, etc. GTA IV en est un des exemples les plus récents.
+* Est sortie depuis longtemps du domaine scientifique. Le monde du jeu vidéo profite depuis quelques années des avancées dans ce domaine: MS Flight Simulator était l'un des premiers, maintenant on parle notamment de moteur physique, de simulation de vagues, etc. GTA IV en est un des exemples les plus récents.
 
 En espérant que vous aurez appris plein de choses et que vous aurez trouver cela intéressant, je vous remercie de m'avoir laissé en parlé :)
 
@@ -281,3 +228,4 @@ En espérant que vous aurez appris plein de choses et que vous aurez trouver cel
 [^ccin2p3]: [http://cc.in2p3.fr/Le-parc-informatique](http://cc.in2p3.fr/Le-parc-informatique)
 [^scalapack]: [http://www.netlib.org/scalapack/](http://www.netlib.org/scalapack/)
 [^magma]: [http://icl.cs.utk.edu/magma/index.html](http://icl.cs.utk.edu/magma/index.html)
+[^gleick]: [James Gleick - La Théorie du Chaos](http://www.amazon.fr/La-th%C3%A9orie-chaos-James-Gleick/dp/2081218046/ref=sr_1_1?ie=UTF8&qid=1389719063&sr=8-1&keywords=james+gleick) 
