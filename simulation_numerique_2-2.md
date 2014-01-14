@@ -28,16 +28,16 @@ Ces différents phénomènes (on pourrait aussi citer par exemple le fait que lo
 
 Le travail que l'on fait finalement quand on part de zéro est donc le suivant :
 
- 1. On définit les équations du modèle qui représente le phénomène que l'on souhaite étudier avec ses conditions aux limites (que se passe-t-il sur les bords du pont)
+ 1. On définit les équations du modèle qui représente le phénomène que l'on souhaite étudier avec ses conditions aux limites (que se passe-t-il sur les bords du pont dont on souhaite modéliser le comportement par forts vents)
  2. On ramène le problème décrit par un modèle à quelque chose de résolvable par un ordinateur
- 3. On assure que la méthode de discrétisation est capable de fournir une solution unique (sinon ça sert pas à grand chose, dans la vraie vie, on a pas plusieurs choix possible)
+ 3. On assure que la méthode de discrétisation est capable de fournir une solution unique (sinon ça sert pas à grand chose, dans la vraie vie, on a pas plusieurs choix possibles)
  4. On choisit et exécute un algorithme qui est capable de résoudre ce problème
 
 ## Définition du domaine
 
-On a déjà parlé dans le premier podcast de ce que l'on entend par modèle, un point qu'il est important de précisé c'est qu'il faut expliquer sur quel domaine ce modèle va s'appliquer (on peut voir en physique par exemple que les théories de la relativité générale et celle de la mécanique quantique par exemple n'ont pas le même domaine d'application) et avec quelles conditions aux limites (sur les bords du domaine)/initiales (au début de la simulation si elle évolue dans le temps par exemple).
+On a déjà parlé dans le premier podcast de ce que l'on entend par modèle. Un point qu'il est important de préciser, c'est qu'il faut expliquer sur quel domaine ce modèle va s'appliquer (on peut voir en physique par exemple que les théories de la relativité générale et celle de la mécanique quantique par exemple n'ont pas le même domaine d'application) et avec quelles conditions aux limites (sur les bords du domaine)/initiales (au début de la simulation si elle évolue dans le temps par exemple).
 
-Assez souvent on va donc donner les équations qui s'appliqueront sur le domaine et on parlera des conditions aux limites pour dire ce qu'il se passe sur les "bords" : une poutre est fixée à un mur et si l'on étudie sa déformation, la condition au niveau du mur est qu'à cet endroit elle ne se déforme pas; si l'on souhaite étudier la température de l'eau que l'on chaufferait dans un tube en cuivre (comme dans une chaudière), à l'entrée du tube l'eau à une température et une certaine vitesse et on chauffe un côté du tube avec une certaine température. Ici la vitesse et les deux température sont des conditions aux limites.
+Assez souvent on va donc donner les équations qui s'appliqueront sur le domaine et on parlera des conditions aux limites pour dire ce qu'il se passe sur les "bords" : une poutre est fixée à un mur et si l'on étudie sa déformation, la condition au niveau du mur est qu'à cet endroit elle ne se déforme pas; si l'on souhaite étudier la température de l'eau que l'on chaufferait dans un tube en cuivre (comme dans une chaudière), à l'entrée du tube l'eau à une température et une certaine vitesse et on chauffe un côté du tube avec une certaine température. Ici la vitesse et les deux températures sont des conditions aux limites.
 
 Ces conditions aux limites vont être ainsi de deux types [^condlimiteswp] :
 
@@ -46,33 +46,35 @@ Ces conditions aux limites vont être ainsi de deux types [^condlimiteswp] :
     * Condition aux limites de Dirichlet[^conddirichletwp] : Un exemple est la valeur de la température aux extrémités d'une barre dans laquelle on voudrait connaître la répartition de chaleur.
     * Conditions aux limites de Neumann[^condneumannwp] : Un exemple, toujours avec une barre dont on souhaiterait connaître la répartition de chaleur est le cas où l'on chauffe l'un des côtés (on a un flux de chaleur à cette extrémité).
     
-### Différences finies
+## Différences finies
 
 Les équations dont je parlais plus tôt, sont des équations dites différentielles : elles sont en fait une relation entre, par exemple, un déplacement, la vitesse et l'accélération ou encore entre la température et son gradient (sa variation sur une distance).
 
-Ces différents concepts seront ce que l'on appelle des dérivées : la dérivée dans le temps du mouvement, c'est sa vitesse et la dérivée dans le temps de la vitesse, c'est l'accélération. Pareil pour la dérivée en espace d'une température, c'est son gradient.
+Ces différents concepts seront ce que l'on appelle des dérivées : la dérivée dans le temps du mouvement, c'est sa vitesse. Et la dérivée dans le temps de la vitesse, c'est l'accélération. Pareil pour la dérivée en espace d'une température, c'est son gradient.
 
-Si on veut trouver le déplacement ou la température qui est solution de cette équation différentielle, on va déjà devoir trouver un moyen d'enlever les vitesses, les gradients et tous les trucs du genre. 
+Si on veut trouver le déplacement ou la température qui est solution d'une équation différentielle, on va déjà devoir trouver un moyen d'enlever les vitesses, les gradients et tous les trucs du genre.
 
-Et bien le rôle de la méthode des différences finies est justement celui-ci : exprimer ces vitesses, gradients, etc en fonction du déplacement ou de la température. 
+Et bien le rôle de la méthode des différences finies est justement celui-ci : exprimer ces vitesses, gradients, etc en fonction du déplacement ou de la température. Il est par contre clair : l'usage des différences finies ne donnera que des solutions approchées ! 
 
 Ce mot différences finies est un peu barbare, mais en fait, quand on y réfléchit bien, on fait des choses à peu près similaire tout les jours. 
 
-Quand on calcul une vitesse, on se demande quelle distance on a parcours entre deux moments et on fait la division. Il s'agit d'une vitesse moyenne. Et bien c'est un peu la même idée, une vitesse à un point sera la variation entre ses positions à deux instants. Et pour se rapprocher de la vitesse dite "instantanée", on diminue l'intervalle de temps le plus possible. Cette vitesse instantanée c'est justement la "dérivée" du déplacement.
+Quand on calcul une vitesse, on se demande quelle distance on a parcours entre deux moments et on fait la division. Il s'agit d'une vitesse moyenne. Et pour se rapprocher de la vitesse dite "instantanée", on diminue l'intervalle de temps le plus possible. Cette vitesse instantanée c'est justement la "dérivée" du déplacement.
 
 Pour l'accélération on fait la même chose que pour obtenir la vitesse (c'est un peu une vitesse de vitesse), et pour le gradient de température, il s'agit d'observer la différence de température entre deux points de l'espace.
 
 Et bien les différences finies vont être aux dérivées, ce que les vitesses moyennes vont être aux vitesses instantanées.
 
-Comme on l'a dit, pour que l'ordinateur puisse nous aider, il faut "discrétiser" les domaines d'études; c'est-à- dire découper en plein de petits morceaux. Pour calculer les différences finies on prendra ainsi les valeurs aux points de ce maillage (le résultat de la discrétisation du domaine continu).
+Comme on l'a dit, pour que l'ordinateur puisse nous aider, il faut "discrétiser" les domaines d'études; c'est-à-dire découper en plein de petits morceaux. Pour calculer les différences finies on prendra ainsi les valeurs aux points de ce maillage (le résultat de la discrétisation du domaine continu).
 
 Ainsi pour chaque point du domaine, on aura remplacé dans l'équation dont on souhaite connaître la solution la valeur des dérivées, etc par les différences finies correspondantes. 
 
-Si on prend toutes ces relations, on se retrouve avec un gros système d'équations que l'on va résoudre comme on le fait au collège et au lycée. C'est ce système d'équations, que l'on appelle aussi système linéaire que l'on cherche ensuite à résoudre avec des algorithmes.
+Si on prend toutes ces relations, on se retrouve avec un gros système d'équations que l'on va résoudre comme on le fait au collège et au lycée. C'est ce système d'équations, que l'on appelle aussi système linéaire et que l'on cherche ensuite à résoudre avec des algorithmes.
+
+### Un peu d'histoire sur les différences finies
 
 Pour information [^pauillac] : à partir du 18ème siècle, des mathématiciens se sont mis à utiliser des différences finies pour mettre en place des abaques notamment pour les logarithmes et la trigonométrie qui étaient utilisés pour le cadastre, la navigation, l'artillerie, les statistiques, le calcul d'intérêts ou encore l'astronomie. Comme ceux-ci nécessitaient de grands nombres d'opérations de calcul, des mathématiciens et inventeurs se sont mis à tenter la mise en place de machines permettant le calcul "automatique" de ces différences finies. Le premier à presque y arriver fut Charles Baggage entre 1820 et 1843 (il n'y arriva pas complètement) et le Suédois George SCHEUTZ (1785-1873) y arriva en 1840. A savoir que ce type de machine a été utilisé jusque dans les année 1930.
 
-#### Remarques et limitations
+### Remarques et limitations
 
 L'un des problèmes des différences finies vient du maillage qui est forcément à base de carrés, de rectangles ou tout du moins de parallélogrammes et que ceci ne permet pas assez efficacement d'approcher des formes qui peuvent être complexes (pour un cercle par exemple, on va retrouver assez peu de points qui seront sur la frontière et qui permettront donc d'exprimer les conditions aux limites).
 
@@ -84,23 +86,24 @@ Elles ont cherché à résoudre certains des problèmes cités avant, notamment 
 
 ## Résolution de systèmes linéaires
 
-Une fois que ces méthodes de discrétisation nous ont permis d'obtenir des systèmes d'équations, ou systèmes linéaires à résoudre, il est nécessaire de mettre en place des algorithmes de résolution du système obtenu.
+Une fois que ces méthodes de discrétisation nous ont permis d'obtenir un système d'équations, ou système linéaire à résoudre, il est nécessaire de mettre en place des algorithmes de résolution du système obtenu.
 
 Il existe ainsi différentes méthodes que l'on pourra classer dans deux grandes catégories : Les méthodes directes [^directmeth] et les méthodes itératives [^itermethwp]
 
 
 ### Les méthodes directes
 
-Les méthodes directives permettent théoriquement d'aboutir à la solution exacte du système linéaire.
+Les méthodes directes permettent théoriquement d'aboutir à la solution exacte du système linéaire.
+
 La plus classique est celle dite du pivot de Gauss ou d'élimination de Gauss-Jordan. Le but est en fait de se débrouille en différentes étapes à résoudre le systèmes d'équation comme on le fait à l'école quand on avait un système de deux équations : on a deux équations avec deux inconnues, on exprime la première inconnue en fonction de l'autre avec la première équations, et on remplace cette inconnue dans la seconde équation pour trouver la deuxième inconnue. Ensuite on met la valeur trouvée pour la seconde inconnue dans la relation avec la première inconnue et on a trouver nos deux valeurs.
 
-Ben le principe est le même, mais avec les inconnues qui vont être les valeurs de la solution aux points du maillage et le système d'équation que l'on a obtenu plus tôt.
+Et bien le principe est le même, mais avec les inconnues qui vont être les valeurs de la solution aux points du maillage et le système d'équations que l'on a obtenu plus tôt.
 
-Le problème de ces méthodes, c'est qu'elles peuvent être longues (on doit faire autant d'étapes que d'inconnues dans le système) et qu'elles peuvent amener des problèmes numériques pendant l'inversion (notamment quand on va devoir diviser par des nombres petits, des choses comme ça), même si à priori elles permettent d'obtenir la solution exacte.
+Le problème de ces méthodes, c'est qu'elles peuvent être longues (on doit faire autant d'étapes que d'inconnues dans le système) et qu'elles peuvent amener des problèmes numériques pendant la résolution (notamment quand on va devoir diviser par des nombres petits, des choses comme ça), même si à priori elles permettent d'obtenir la solution exacte.
 
-### Les méthodes itératives. 
+### Les méthodes itératives
 
-Celles-ci propose de partir d'une solution initiale et d'ensuite chercher à se rapprocher de la vraie solution en regardant si on se rapproche ou on s'éloigne.
+Celles-ci proposent de partir d'une solution initiale et d'ensuite chercher à se rapprocher de la vraie solution en regardant à chaque itération si on s'en rapproche ou on s'en éloigne.
 
 La plupart de ces méthodes, dites de Krylov[^krylovwp], ont pour but de calculer à chaque étape un gradient qui va donner la direction dans laquelle aller pour se rapprocher de la solution. En fait, à chaque étape il va littéralement nous dire si on chauffe ou si on refroidit (comme pour le gradient de température)!
 
