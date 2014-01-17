@@ -18,6 +18,8 @@ Il existe tout un tas de méthodes de discrétisation, nous aborderons l'un des 
 
 Mais avant toute chose, il faut bien comprendre que ces méthodes ne permettent pas de tout traiter. C'est comme pour les modèles : elles sont valables et valides dans certains cadres. Quand les équations sont trop chaotiques, que des phénomènes de seuil critique (en dessous, rien ne se passe, et au-dessus on voit apparaître quelque chose), de saturation (au-dessus d'un seuil le comportement observé ne change pas) ou d'hystérésis (une valeur d'entrée, qu'elle soit attente en accélération ou en décélération va donner deux sorties différentes, même si c'est deux fois la même valeur) apparaissent, on arrive à leurs limites.
 
+![Seuil critique du changement de phase de l'eau (liquide -> solide)](images/seuil_critique.png "Seuil critique du changement de phase de l'eau (liquide -> solide")
+
 On parle en fait de linéarité : quand on en met deux fois plus en entrée, on en a deux fois plus à la sortie. Chose que n'est plus respecté avec ces histoires de seuil critique ou de saturation.
 
 Et un gros problème des modèles d'aujourd'hui c'est qu'ils sont très hautement non-linéaires. C'est pourquoi avant toute chose, on va essayer de linéariser ces équations complexes en enlevant les termes qui ne sont pas représentatifs (on néglige souvent les frottements de l'air quand on modélise un pendule par exemple) ou en prenant des approximations pour des cas plus simples (pour modéliser un pont on va considérer des petites déformations), d'oû proviennent souvent les non-linéarités.
@@ -44,7 +46,9 @@ Ces conditions aux limites vont être ainsi de deux types [^condlimiteswp] :
  * *Les conditions aux limites en temps* : on prend par exemple pour la prévision du temps les conditions de température ou de pression à un instant $t$ et on fait évoluer à partir de ces conditions.
  * *Les conditions aux limites en espace* : les deux plus classiques sont les suivantes :
     * Condition aux limites de Dirichlet[^conddirichletwp] : Un exemple est la valeur de la température aux extrémités d'une barre dans laquelle on voudrait connaître la répartition de chaleur.
-    * Conditions aux limites de Neumann[^condneumannwp] : Un exemple, toujours avec une barre dont on souhaiterait connaître la répartition de chaleur est le cas où l'on chauffe l'un des côtés (on a un flux de chaleur à cette extrémité).
+    * Conditions aux limites de Neumann[^condneumannwp] : Un exemple, toujours avec l'équation de la chaleur ou deux corps avec des températures différentes et il y a un flux de chaleur constant du corps le plus chaud vers le plus froid.
+
+![Exemples de conditions aux limites en espace](images/conditions_espaces.png "Exemples de conditions aux limites en espace")
     
 ## Différences finies
 
@@ -52,7 +56,7 @@ Les équations dont je parlais plus tôt, sont des équations dites différentie
 
 Ces différents concepts seront ce que l'on appelle des dérivées : la dérivée dans le temps du mouvement, c'est sa vitesse. Et la dérivée dans le temps de la vitesse, c'est l'accélération. Pareil pour la dérivée en espace d'une température, c'est son gradient.
 
-Si on veut trouver le déplacement ou la température qui est solution d'une équation différentielle, on va déjà devoir trouver un moyen d'enlever les vitesses, les gradients et tous les trucs du genre.
+Si on veut trouver le déplacement ou la température qui est solution d'une équation différentielle, on va déjà devoir trouver un moyen d'enlever les vitesses, les gradients et tous les trucs du genre et remplacer tout ça par quelque chose qui sera fonction du déplacement ou de la température.
 
 Et bien le rôle de la méthode des différences finies est justement celui-ci : exprimer ces vitesses, gradients, etc en fonction du déplacement ou de la température. Il est par contre clair : l'usage des différences finies ne donnera que des solutions approchées ! 
 
@@ -65,6 +69,8 @@ Pour l'accélération on fait la même chose que pour obtenir la vitesse (c'est 
 Et bien les différences finies vont être aux dérivées, ce que les vitesses moyennes vont être aux vitesses instantanées.
 
 Comme on l'a dit, pour que l'ordinateur puisse nous aider, il faut "discrétiser" les domaines d'études; c'est-à-dire découper en plein de petits morceaux. Pour calculer les différences finies on prendra ainsi les valeurs aux points de ce maillage (le résultat de la discrétisation du domaine continu).
+
+![Exemple de maillage basé sur les différences finies](images/maillage-differences-finies-disque.png "Exemple de maillage basé sur les différences finies")
 
 Ainsi pour chaque point du domaine, on aura remplacé dans l'équation dont on souhaite connaître la solution la valeur des dérivées, etc par les différences finies correspondantes. 
 
@@ -107,6 +113,8 @@ Celles-ci proposent de partir d'une solution initiale et d'ensuite chercher à s
 
 La plupart de ces méthodes, dites de Krylov[^krylovwp], ont pour but de calculer à chaque étape un gradient qui va donner la direction dans laquelle aller pour se rapprocher de la solution. En fait, à chaque étape il va littéralement nous dire si on chauffe ou si on refroidit (comme pour le gradient de température)!
 
+![Les lignes bleues représentent le gradient de couleur du plus clair vers le plus foncé - crédit wikipédia](images/500px-Gradient2.png "Les lignes bleues représentent le gradient de couleur du plus clair vers le plus foncé - crédit wikipédia")
+
 Comme on se rapproche au fur et à mesure des étapes de la solution, on peut se fixer une précision à partir de laquelle on va s'arrêter. Ainsi on n'ira pas jusqu'à un nombre d'itérations qui correspond à la taille du problème. C'est pour cela qu'elles sont souvent utilisées à la place des méthodes dites directes car elles sont vues comme plus rapides.
 
 ## Parallélisation et décomposition de domaine
@@ -114,6 +122,8 @@ Comme on se rapproche au fur et à mesure des étapes de la solution, on peut se
 Quand les systèmes linéaires à résoudre deviennent trop gros et que l'on a à disposition des serveurs informatiques avec de multiples processeurs, voire même plusieurs serveurs informatiques, on peut tenter de paralléliser ces algorithmes.
 
 Une littérature abondante existe sur la question, et on peut faire ce que l'on appelle de la décomposition de domaine par exemple[^ddmwp]. Si on dispose de quatre processeurs et que l'on veut simuler la modification de structure d'un avion en vol, on va par exemple faire calculer la solution sur chaque aile à l'un d'entre eux et on va couper le fuselage en deux pour le distribuer entre les deux processeurs restant.
+
+![Exemple de décomposition d'un domaine en 8 sous-domaines - crédit code-aster.org](images/sous-domaines.png "Exemple de décomposition d'un domaine en 8 sous-domaines - crédit code-aster.org")
 
 Dans ces cas-là il devient important de bien découper ces problèmes pour qu'aux frontières tout se passent bien (je rappelle que l'on calcule les solutions aux points des maillages et que si ils ne coincident pas on peut commencer à avoir des problèmes) avec un peu de recouvrement pour que les informations de la solution à chercher puissent se propager entre les "domaines".
 
@@ -141,6 +151,8 @@ Quelque chose qui s'est développé ces dernières années a notamment été l'u
 
 Il y a quand même quelques inconvénients : Avant que qu'OpenCL[^openclwp] n'arrive, voire même CUDA [^cudawp] avant lui (deux "langages dédié à l'usage de GPU") il était nécessaire de manier les structures de données propres aux jeux vidéos pour en tirer partie. Ce n'était pas très évident et plus du domaine de la bidouille qu'autre chose. 
 
+![Carte Nvidia Tesla c1060 - crédit Nvidia](images/tesla_c1060_boardshot.jpg "Carte Nvidia Tesla c1060 - crédit Nvidia")
+
 Maintenant cela est plus simple car s'est développé un eco-système logiciel qui va permettre de développer son logiciel avec certaines directives spécifiques : autour d'une boucle d'opérations indépendantes on va dire que cela peut être déployé sur tous les processeurs du GPU par exemple. Celui-ci sera compilé de telle manière que l'application produite, quand elle arrivera à ces directives, saura comment faire pour exploiter la puissance du GPU. Et un certain nombre de code de calcul se mettent à en tirer partie. Cependant les limitations en terme de mémoire de ces cartes (si on a plus de données que la place disponible dans la carte, on va adresser la mémoire centrale de l'ordinateur et l'on perd tout l'intérêt car, du point de vue tant d'accès, on perd du temps à aller chercher des données et à les ramener sur la carte graphique) et de précision numérique (les cartes ne calculent qu'avec des entiers de base et pas des nombres réels vu qu'elles servent plutôt à manier des pixels normalement) font que les performances mirobolantes annoncées par Nvidia notamment, en font revenir plus d'un vers le calcul plus classique .
 
 Une des alternatives qui commence à arriver serait l'usage (comme il y a bien longtemps) de co-processeurs spécialisés à cette tâche comme les Xeon-Phi[^xeonphi] de chez Intel. Le but du Xeon Phi, est de fournir un équivalent de GPU (en terme de puissance, de nombre de coeur, etc) mais avec la même architecture logicielle que les processeurs classiques (x86). En fait l'idée est que l'on puisse se passer des surcouches logicielles dont on se sert pour adapter une application pour des GPUs classiques.
@@ -160,6 +172,8 @@ Pendant longtemps ce logiciel a été à la base du Top500[^top500], le classeme
 ### Green500 et performance énergétique
 
 A noter par exemple que Tianhe-2, la machine la plus puissante du monde, possède presque 3 millions de coeurs dont une grande partie correspond à des co-processeurs xeon phi possédant chacun 57 coeurs mais avec une performance énergétique (puissance Linpack sur consommation énergétique) en retrait (1900 MFlops/W).
+
+![Tianhe-2 est le super-calculateur le plus puissant au monde - crédit telegraph.co.uk](images/Tianhe_2594189b.jpg "Tianhe-2 est le super-calculateur le plus puissant au monde - crédit telegraph.co.uk")
 
 Au contraire la machine détenue par le centre de calcul du ROMEO en Champagne-Ardennes est classée 5ème du green500 et possède une très bonne performance énergétique (3130 MFlops/W).
 
