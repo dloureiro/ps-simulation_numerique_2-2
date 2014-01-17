@@ -7,5 +7,11 @@ size="600x600"
 mkdir -p $output
 
 for file in $(ls $input); do
-    convert -geometry $size $input/$file $output/$file
+	baseName=$(basename $file .graffle)
+	if [ "$baseName" = "$file" ] ; then
+		convert -geometry $size $input/$file $output/$file
+    else
+    	echo "Not converting graffle file : $file"
+    	
+    fi
 done
