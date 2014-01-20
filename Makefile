@@ -1,10 +1,16 @@
 FILENAME = simulation_numerique_2-2
 
-all: epub html pdf
+all: epub pdf html
 
-epub:
+epub: pdf
 	mkdir -p output/$@
-	pandoc --toc titre.txt ${FILENAME}.md -o output/$@/${FILENAME}.$@
+	pdftk output/pdf/${FILENAME}.pdf cat 1 output output/$@/cover.pdf
+	convert output/$@/cover.pdf output/$@/une_cover.png
+	rm -rf output/$@/cover.pdf
+	convert output/$@/une_cover.png -crop 400x573+90+118 +repage output/$@/cover.png
+	rm -rf output/$@/une_cover.png
+	pandoc -S -s --toc --epub-cover-image=output/$@/cover.png title.md ${FILENAME}.md -o output/$@/${FILENAME}.$@
+	rm -rf output/$@/cover.png
 
 html:
 	mkdir -p output/$@
@@ -13,7 +19,7 @@ html:
 
 pdf:
 	mkdir -p output/$@
-	pandoc -s --latex-engine xelatex ${FILENAME}.md -o output/pdf/${FILENAME}.$@
+	pandoc -S -s --template=./podcastscience-template.latex --toc -V lang:french -V mainfont:Cambria -V fontsize:11pt -V geometry:a4paper -s --latex-engine xelatex title.md ${FILENAME}.md -o output/pdf/${FILENAME}.$@
 
 clean_epub:
 	rm -rf output/epub
