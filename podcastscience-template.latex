@@ -106,7 +106,6 @@ $endif$
         \vskip 10\p@
         \begin{flushleft}
           \includegraphics[width=10cm]{image_couverture} \par
-          \tiny crédit : $credit_image$ \par
         \end{flushleft}
         \vfil
         }}
@@ -186,6 +185,12 @@ $if(toc)$
 }
 $endif$
 \cleardoublepage
+\include{image_couverture}
+\cleardoublepage
+\include{quote}
+\cleardoublepage
+\include{teaser}
+\cleardoublepage
 $body$
 
 $if(natbib)$
@@ -209,4 +214,8 @@ $for(include-after)$
 $include-after$
 
 $endfor$
+
+\cleardoublepage
+\listoffigures
+
 \end{document}

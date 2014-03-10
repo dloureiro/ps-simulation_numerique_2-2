@@ -1,6 +1,8 @@
-# Dossier : Simulation Numérique 2/2
+# Générateur de template pour les épisodes de podcastscience
 
-Contenu de la seconde partie d'un dossier sur la Simulation Numérique pour Podcast Science
+# Description
+
+`ps-gen` est un générateur de template pour les épisodes de podcastscience.
 
 ## Dépendances
 
