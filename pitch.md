@@ -1,2 +1,3 @@
 # Pitch
 
+Vous avez aimé le précédent podcast sur la simulation ? Alors attendez la seconde partie ! Autant dans le premier nous avions parlé des problématiques liées aux modèles pour représenter le réel, des avantages de la reproductibilité de la simulation numérique et d'exemples de domaines où la simulation numérique aide à faire avancer la science; autant dans cette seconde partie nous expliquerons comment l'on informatise un modèle: la discrétisation des modèles et des équations, l'implémentation avec des algorithmes, l'impact de la simulation sur l'informatique et bien sûr tous les problèmes que l'on rencontre tout le long de ce travail devenu indispensable aujourd'hui pour tant de domaine. Oui je simule, mais c'est pour la bonne cause !

@@ -9,17 +9,17 @@ epub: pdf
 	rm -rf output/$@/cover.pdf
 	convert output/$@/une_cover.png -crop 400x573+90+118 +repage output/$@/cover.png
 	rm -rf output/$@/une_cover.png
-	pandoc -S -s --toc --epub-cover-image=output/$@/cover.png title.md ${FILENAME}.md -o output/$@/${FILENAME}.$@
+	pandoc -S -s --toc --epub-cover-image=output/$@/cover.png title.md pitch.md ${FILENAME}.md -o output/$@/${FILENAME}.$@
 	rm -rf output/$@/cover.png
 
 html:
 	mkdir -p output/$@
 	./scripts/convertImages.sh images output/$@/images
-	pandoc -s ${FILENAME}.md -o output/$@/${FILENAME}.$@
+	pandoc -s pitch.md ${FILENAME}.md -o output/$@/${FILENAME}.$@
 
 pdf:
 	mkdir -p output/$@
-	pandoc -S -s --template=./podcastscience-template.latex --toc -V lang:french -V mainfont:Cambria -V fontsize:11pt -V geometry:a4paper -s --latex-engine xelatex title.md ${FILENAME}.md -o output/pdf/${FILENAME}.$@
+	pandoc -S -s --template=./podcastscience-template.latex --toc -V lang:french -V mainfont:Cambria -V fontsize:11pt -V geometry:a4paper -s --latex-engine xelatex title.md pitch.md ${FILENAME}.md -o output/pdf/${FILENAME}.$@
 
 clean_epub:
 	rm -rf output/epub
@@ -32,3 +32,10 @@ clean_pdf:
 
 clean: clean_epub clean_html clean_pdf
 	rm -rf output
+
+generate:
+
+
+verify:
+
+	
