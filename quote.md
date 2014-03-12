@@ -1,5 +1,5 @@
 # Quote
 
-> We live in a world where there is more and more information, and less and less meaning
+> It would appear that we have reached the limits of what it is possible to achieve with computer technology, although one should be careful with such statements, as they tend to sound pretty silly in 5 years.
 
-**Jean Baudrillard, *Simulacra and Simulation***
+**John Van Neumann**
